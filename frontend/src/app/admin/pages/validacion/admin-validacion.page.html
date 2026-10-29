@@ -1,0 +1,138 @@
+<section class="admin-validacion-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Validacion</p>
+      <h2>Control de acceso</h2>
+      <p>Escanea, pega o escribe el codigo del boleto para validar el acceso del asistente.</p>
+    </div>
+  </div>
+
+  <section class="validator-card">
+    <div class="camera-placeholder">
+      <div>
+        <p class="eyebrow">Escanear con camara</p>
+        <h3>Escaner QR</h3>
+        <p>La validacion manual sigue activa. Ahora el escaneo usa una libreria dedicada para mejorar la compatibilidad entre navegadores y dispositivos.</p>
+      </div>
+
+      <div class="camera-placeholder__frame" [class.camera-placeholder__frame--active]="cameraActive()">
+        <video #scannerVideo class="scanner-video" autoplay muted playsinline></video>
+        <div class="camera-placeholder__corners"></div>
+        @if (!cameraActive()) {
+          <span>Vista previa del escaner</span>
+        }
+      </div>
+
+      <div class="validator-actions">
+        @if (!cameraActive()) {
+          <ion-button class="ghost-button" fill="outline" [disabled]="!cameraSupported()" (click)="activarCamara()">
+            Activar camara
+          </ion-button>
+        } @else {
+          <ion-button class="ghost-button" fill="outline" (click)="desactivarCamara()">
+            Detener camara
+          </ion-button>
+        }
+      </div>
+
+      @if (!cameraSupported()) {
+        <ion-text color="warning">
+          <p class="feedback feedback--camera">Este navegador no soporta acceso a camara para escaneo QR. Puedes seguir validando manualmente con folio o codigo.</p>
+        </ion-text>
+      }
+
+      @if (cameraError()) {
+        <ion-text color="danger">
+          <p class="feedback">{{ cameraError() }}</p>
+        </ion-text>
+      }
+    </div>
+
+    <label class="validator-field">
+      <span>Codigo QR o codigo manual</span>
+      <input
+        type="text"
+        placeholder="Ej. BOL-20260709-000001 o codigo QR"
+        [ngModel]="codigoQr()"
+        (ngModelChange)="codigoQr.set($event)"
+      >
+    </label>
+
+    @if (errorMessage()) {
+      <ion-text color="danger">
+        <p class="feedback">{{ errorMessage() }}</p>
+      </ion-text>
+    }
+
+    <div class="validator-actions">
+      <ion-button class="validate-button" [disabled]="loading()" (click)="validarBoleto()">
+        @if (loading()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          Validar boleto
+        }
+      </ion-button>
+
+      @if (resultado()) {
+        <ion-button class="ghost-button" fill="outline" (click)="validarOtro()">Validar otro boleto</ion-button>
+      }
+    </div>
+  </section>
+
+  @if (resultado(); as result) {
+    <section class="result-card" [class.result-card--success]="result.tone === 'success'" [class.result-card--warning]="result.tone === 'warning'" [class.result-card--danger]="result.tone === 'danger'">
+      <div class="result-head">
+        <div class="result-semaphore"></div>
+        <div>
+          <p class="eyebrow">Resultado</p>
+          <h3>{{ result.title }}</h3>
+          <p>{{ result.message }}</p>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <article class="result-block">
+          <p class="eyebrow">Boleto</p>
+          <dl>
+            <div>
+              <dt>Folio</dt>
+              <dd>{{ result.data.boleto?.folio || 'No disponible' }}</dd>
+            </div>
+            <div>
+              <dt>Estado</dt>
+              <dd>{{ result.data.boleto?.estado || result.data.resultado }}</dd>
+            </div>
+            <div>
+              <dt>Fecha de uso</dt>
+              <dd>
+                @if (result.data.boleto?.fecha_uso) {
+                  {{ result.data.boleto?.fecha_uso | date:'medium' }}
+                } @else {
+                  Sin registrar
+                }
+              </dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="result-block">
+          <p class="eyebrow">Orden y tipo</p>
+          <dl>
+            <div>
+              <dt>Orden</dt>
+              <dd>{{ result.data.boleto?.orden?.folio || 'No disponible' }}</dd>
+            </div>
+            <div>
+              <dt>Tipo de boleto</dt>
+              <dd>{{ result.data.boleto?.tipo_boleto?.nombre || 'No disponible' }}</dd>
+            </div>
+            <div>
+              <dt>Evento</dt>
+              <dd>{{ result.data.boleto?.evento?.titulo || 'No disponible' }}</dd>
+            </div>
+          </dl>
+        </article>
+      </div>
+    </section>
+  }
+</section>

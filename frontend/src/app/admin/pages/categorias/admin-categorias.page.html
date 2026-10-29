@@ -1,0 +1,100 @@
+<section class="admin-crud-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Categorias</p>
+      <h2>Gestion de categorias</h2>
+      <p>Administra los tipos de eventos disponibles en Boletitos.</p>
+    </div>
+
+    <div class="head-actions">
+      <div class="summary-pills">
+        <span>Total: {{ summary().total }}</span>
+        <span>Activas: {{ summary().activas }}</span>
+        <span>Inactivas: {{ summary().inactivas }}</span>
+      </div>
+      <ion-button class="new-button" (click)="nuevaCategoria()">NUEVA CATEGORIA</ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando categorias...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    <div class="content-grid">
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripcion</th>
+              <th>Estado</th>
+              <th>Creacion</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (categoria of categorias(); track categoria.id) {
+              <tr>
+                <td><strong>{{ categoria.nombre }}</strong></td>
+                <td>{{ categoria.descripcion || 'Sin descripcion' }}</td>
+                <td><span [class]="estadoClass(categoria)">{{ categoria.estado || 'activo' }}</span></td>
+                <td>{{ categoria.created_at ? (categoria.created_at | date:'mediumDate') : 'No disponible' }}</td>
+                <td>
+                  <div class="actions">
+                    <button type="button" (click)="editarCategoria(categoria)">Editar</button>
+                    <button type="button" class="danger" (click)="eliminarCategoria(categoria)">Eliminar</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="form-panel">
+        <div class="panel-head">
+          <p class="eyebrow">Formulario</p>
+          <h3>{{ editingCategoriaId() ? 'Editar categoria' : 'Nueva categoria' }}</h3>
+        </div>
+
+        <label class="field">
+          <span>Nombre *</span>
+          <input type="text" [ngModel]="form().nombre" (ngModelChange)="updateField('nombre', $event)">
+          @if (validationErrors()['nombre']) { <small>{{ validationErrors()['nombre'] }}</small> }
+        </label>
+
+        <label class="field">
+          <span>Descripcion</span>
+          <textarea rows="4" [ngModel]="form().descripcion" (ngModelChange)="updateField('descripcion', $event)"></textarea>
+        </label>
+
+        <label class="field">
+          <span>Estado</span>
+          <select [ngModel]="form().estado" (ngModelChange)="updateField('estado', $event)">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </label>
+
+        @if (apiMessage()) {
+          <ion-text color="warning">
+            <p class="feedback feedback--info">{{ apiMessage() }}</p>
+          </ion-text>
+        }
+
+        <div class="form-actions">
+          <ion-button class="ghost-button" fill="outline" (click)="nuevaCategoria()">Limpiar</ion-button>
+          <ion-button class="new-button" [disabled]="saving()" (click)="guardarCategoria()">
+            @if (saving()) { <ion-spinner name="crescent"></ion-spinner> } @else { {{ editingCategoriaId() ? 'GUARDAR CAMBIOS' : 'CREAR CATEGORIA' }} }
+          </ion-button>
+        </div>
+      </aside>
+    </div>
+  }
+</section>

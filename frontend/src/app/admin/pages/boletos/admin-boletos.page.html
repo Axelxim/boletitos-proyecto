@@ -1,0 +1,215 @@
+<section class="admin-boletos-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Boletos</p>
+      <h2>Boletos individuales generados</h2>
+      <p>Consulta los boletos emitidos, revisa su estado y navega al detalle de cada acceso.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando boletos...</p>
+    </div>
+  } @else {
+    @if (errorMessage()) {
+      <ion-text color="danger">
+        <p class="feedback">{{ errorMessage() }}</p>
+      </ion-text>
+    }
+
+    <section class="filters-card">
+      <label class="field">
+        <span>Folio de boleto</span>
+        <input
+          type="text"
+          placeholder="Ej. BOL-20260709-000001"
+          [ngModel]="boletoFolioFilter()"
+          (ngModelChange)="updateBoletoFolio($event)"
+        >
+      </label>
+
+      <label class="field">
+        <span>Folio de orden</span>
+        <input
+          type="text"
+          placeholder="Ej. ORD-20260709-000005"
+          [ngModel]="ordenFolioFilter()"
+          (ngModelChange)="updateOrdenFolio($event)"
+        >
+      </label>
+
+      <label class="field">
+        <span>Evento</span>
+        <select [ngModel]="eventoFilter()" (ngModelChange)="updateEvento($event)">
+          <option value="todos">Todos</option>
+          @for (evento of eventosDisponibles(); track evento.id) {
+            <option [value]="evento.id">{{ evento.titulo }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Estado</span>
+        <select [ngModel]="estadoFilter()" (ngModelChange)="updateEstado($event)">
+          <option value="todos">Todos</option>
+          <option value="vigente">Vigente</option>
+          <option value="usado">Usado</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Comprador o correo</span>
+        <input
+          type="text"
+          placeholder="Nombre o correo del comprador"
+          [ngModel]="compradorFilter()"
+          (ngModelChange)="updateComprador($event)"
+        >
+      </label>
+
+      <label class="field">
+        <span>Desde</span>
+        <input type="date" [ngModel]="fechaDesde()" (ngModelChange)="updateFechaDesde($event)">
+      </label>
+
+      <label class="field">
+        <span>Hasta</span>
+        <input type="date" [ngModel]="fechaHasta()" (ngModelChange)="updateFechaHasta($event)">
+      </label>
+    </section>
+
+    <p class="api-note">
+      Los datos de comprador se enriquecen desde las ordenes administrativas. La cancelacion de boleto sigue deshabilitada porque no existe endpoint backend para esa accion.
+    </p>
+
+    <section class="table-card">
+      @if (filteredBoletos().length > 0) {
+        <div class="table-wrap">
+          <table class="boletos-table">
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Evento</th>
+                <th>Tipo</th>
+                <th>Comprador</th>
+                <th>Correo</th>
+                <th>Orden</th>
+                <th>Estado</th>
+                <th>Emision</th>
+                <th>Uso</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (boleto of filteredBoletos(); track boleto.id) {
+                <tr>
+                  <td>
+                    <div class="folio-block">
+                      <strong>{{ boleto.folio }}</strong>
+                      <small>#{{ boleto.id }}</small>
+                    </div>
+                  </td>
+                  <td>{{ boleto.evento?.titulo || 'Evento sin referencia' }}</td>
+                  <td>{{ boleto.tipo_boleto?.nombre || 'Tipo sin referencia' }}</td>
+                  <td>
+                    <div class="buyer-block">
+                      <strong>{{ boleto.comprador?.nombre || 'No disponible' }}</strong>
+                      <small>{{ boleto.comprador?.telefono || 'Sin telefono' }}</small>
+                    </div>
+                  </td>
+                  <td>{{ boleto.comprador?.correo || 'No disponible' }}</td>
+                  <td>
+                    @if (boleto.orden?.id) {
+                      <a [routerLink]="['/admin/ordenes', boleto.orden?.id]">{{ boleto.orden?.folio }}</a>
+                    } @else {
+                      <span>Sin orden</span>
+                    }
+                  </td>
+                  <td><span [class]="estadoClass(boleto.estado)">{{ boleto.estado }}</span></td>
+                  <td>{{ boleto.created_at | date:'medium' }}</td>
+                  <td>{{ boleto.fecha_uso ? (boleto.fecha_uso | date:'medium') : 'Sin uso' }}</td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/admin/boletos', boleto.id]">Ver detalle</a>
+                      <a [routerLink]="['/admin/boletos', boleto.id]" fragment="qr">Ver QR</a>
+                      @if (boleto.orden?.id) {
+                        <a [routerLink]="['/admin/ordenes', boleto.orden?.id]">Ver orden</a>
+                      } @else {
+                        <span class="muted-link">Ver orden</span>
+                      }
+                      <span class="muted-link">Imprimir</span>
+                      @if (canCancel(boleto)) {
+                        <span class="muted-link">Cancelar</span>
+                      } @else {
+                        <span class="muted-link">Cancelar</span>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cards-wrap">
+          @for (boleto of filteredBoletos(); track boleto.id) {
+            <article class="ticket-item-card">
+              <div class="ticket-item-card__head">
+                <div class="folio-block">
+                  <strong>{{ boleto.folio }}</strong>
+                  <small>{{ boleto.evento?.titulo || 'Evento sin referencia' }}</small>
+                </div>
+                <span [class]="estadoClass(boleto.estado)">{{ boleto.estado }}</span>
+              </div>
+
+              <div class="ticket-item-card__grid">
+                <div>
+                  <span class="card-meta">Tipo</span>
+                  <strong>{{ boleto.tipo_boleto?.nombre || 'No disponible' }}</strong>
+                </div>
+                <div>
+                  <span class="card-meta">Orden</span>
+                  <strong>{{ boleto.orden?.folio || 'No disponible' }}</strong>
+                </div>
+                <div>
+                  <span class="card-meta">Comprador</span>
+                  <strong>{{ boleto.comprador?.nombre || 'No disponible' }}</strong>
+                </div>
+                <div>
+                  <span class="card-meta">Correo</span>
+                  <strong>{{ boleto.comprador?.correo || 'No disponible' }}</strong>
+                </div>
+                <div>
+                  <span class="card-meta">Emision</span>
+                  <strong>{{ boleto.created_at | date:'mediumDate' }}</strong>
+                </div>
+                <div>
+                  <span class="card-meta">Uso</span>
+                  <strong>{{ boleto.fecha_uso ? (boleto.fecha_uso | date:'mediumDate') : 'Sin uso' }}</strong>
+                </div>
+              </div>
+
+              <div class="actions">
+                <a [routerLink]="['/admin/boletos', boleto.id]">Ver detalle</a>
+                <a [routerLink]="['/admin/boletos', boleto.id]" fragment="qr">Ver QR</a>
+                @if (boleto.orden?.id) {
+                  <a [routerLink]="['/admin/ordenes', boleto.orden?.id]">Ver orden</a>
+                } @else {
+                  <span class="muted-link">Ver orden</span>
+                }
+                <span class="muted-link">Imprimir</span>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>No hay boletos que coincidan con los filtros seleccionados.</p>
+        </div>
+      }
+    </section>
+  }
+</section>

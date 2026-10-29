@@ -1,0 +1,143 @@
+<ion-content [fullscreen]="true">
+  <section class="checkout-page">
+    @if (loading()) {
+      <div class="state-box">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Preparando checkout...</p>
+      </div>
+    } @else if (!hasSelection()) {
+      <div class="empty-state">
+        <h1>Checkout</h1>
+        <p>{{ errorMessage() || 'No hay boletos seleccionados para continuar.' }}</p>
+        <ion-button class="checkout-button" (click)="volverAlEvento()">Volver al evento</ion-button>
+      </div>
+    } @else if (selection(); as selectionData) {
+      <div class="checkout-head">
+        <p class="eyebrow">Checkout</p>
+        <h1>Confirma tu compra</h1>
+        <p>{{ selectionData.evento.titulo }}</p>
+      </div>
+
+      <div class="checkout-grid">
+        <section class="checkout-panel">
+          <div class="panel-head">
+            <p class="eyebrow">Resumen</p>
+            <h2>Boletos seleccionados</h2>
+          </div>
+
+          <div class="summary-event">
+            <strong>{{ selectionData.evento.titulo }}</strong>
+            <span>{{ selectionData.evento.fecha_inicio | date:'mediumDate' }}</span>
+            <span>{{ selectionData.evento.lugar }}</span>
+          </div>
+
+          <div class="summary-list">
+            @for (item of selectionData.items; track item.tipo_boleto_id) {
+              <article class="summary-item">
+                <div>
+                  <h3>{{ item.nombre }}</h3>
+                  <p>{{ item.descripcion || 'Boleto seleccionado.' }}</p>
+                </div>
+                <div class="summary-item__numbers">
+                  <span>{{ item.cantidad }} x {{ item.precio | number:'1.2-2' }}</span>
+                  <strong>{{ item.subtotal | number:'1.2-2' }}</strong>
+                </div>
+              </article>
+            }
+          </div>
+
+          <div class="totals-box">
+            <div><span>Subtotal</span><strong>{{ selectionData.subtotal | number:'1.2-2' }}</strong></div>
+            <div><span>Comision</span><strong>{{ selectionData.comision | number:'1.2-2' }}</strong></div>
+            <div class="totals-box__total"><span>Total</span><strong>{{ selectionData.total | number:'1.2-2' }}</strong></div>
+          </div>
+        </section>
+
+        <section class="checkout-panel">
+          @if (isAuthenticatedMode()) {
+            <div class="session-box">
+              <p class="eyebrow">Sesion activa</p>
+              <h2>Comprando como</h2>
+              <p>{{ form().nombre_comprador || authenticatedUser()?.nombre }} · {{ form().correo_comprador }}</p>
+              <button type="button" class="text-action" (click)="cerrarSesionYSeguirComoInvitado()">
+                Cerrar sesion y continuar como invitado
+              </button>
+            </div>
+          } @else if (mode() === 'choose') {
+            <div class="guest-choice">
+              <p class="eyebrow">Tu cuenta</p>
+              <h2>Antes de continuar</h2>
+              <p>Puedes iniciar sesion para guardar tus boletos automaticamente en tu cuenta, o continuar como invitado.</p>
+              <div class="guest-choice__actions">
+                <ion-button class="checkout-button" expand="block" (click)="irALogin()">Iniciar sesion</ion-button>
+                <ion-button class="checkout-button checkout-button--ghost" expand="block" fill="outline" (click)="irARegistro()">Crear cuenta</ion-button>
+                <ion-button class="checkout-button checkout-button--ghost" expand="block" fill="outline" (click)="elegirInvitado()">Continuar como invitado</ion-button>
+              </div>
+            </div>
+          }
+
+          @if (mode() !== 'choose') {
+            <div class="panel-head">
+              <p class="eyebrow">Comprador</p>
+              <h2>Datos para la orden</h2>
+            </div>
+
+            <div class="form-grid">
+              <label class="field">
+                <span>Nombre</span>
+                <input type="text" [value]="form().nombre_comprador" (input)="updateField('nombre_comprador', $event)">
+              </label>
+              <label class="field">
+                <span>Correo</span>
+                <input
+                  type="email"
+                  [value]="form().correo_comprador"
+                  [readonly]="isAuthenticatedMode()"
+                  (input)="updateField('correo_comprador', $event)"
+                >
+              </label>
+              <label class="field">
+                <span>Telefono</span>
+                <input
+                  type="tel"
+                  inputmode="numeric"
+                  maxlength="10"
+                  [value]="form().telefono_comprador"
+                  (input)="updateField('telefono_comprador', $event)"
+                  placeholder="4491234567"
+                >
+              </label>
+            </div>
+
+            @if (errorMessage()) {
+              <ion-text color="danger">
+                <p class="feedback">{{ errorMessage() }}</p>
+              </ion-text>
+            }
+
+            @if (successMessage()) {
+              <ion-text color="success">
+                <p class="feedback feedback--success">{{ successMessage() }}</p>
+              </ion-text>
+            }
+
+            @if (ordenCreada(); as orden) {
+              <div class="order-result">
+                <span>Folio</span>
+                <strong>{{ orden.folio }}</strong>
+                <span>Estado: {{ orden.estado }}</span>
+              </div>
+              <ion-button class="checkout-button" expand="block" (click)="irAPagoSimulado()">
+                Continuar a pago simulado
+              </ion-button>
+            } @else {
+              <ion-button class="checkout-button" expand="block" [disabled]="!canSubmit()" (click)="confirmarCompra()">
+                {{ submitting() ? 'Procesando...' : 'Confirmar compra' }}
+              </ion-button>
+            }
+          }
+        </section>
+      </div>
+    }
+  </section>
+</ion-content>

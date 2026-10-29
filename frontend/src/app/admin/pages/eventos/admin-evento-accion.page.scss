@@ -1,0 +1,44 @@
+.admin-evento-accion {
+  display: grid;
+  gap: 18px;
+}
+
+.eyebrow {
+  color: #c9a227;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.admin-evento-accion h2 {
+  color: #fff7e6;
+  margin: 0;
+}
+
+.placeholder-card {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(9, 9, 9, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 24px;
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+  padding: 28px;
+}
+
+.placeholder-card strong {
+  color: #f4d06f;
+  font-size: 1.3rem;
+}
+
+.placeholder-card span,
+.placeholder-card p {
+  color: rgba(255, 247, 230, 0.74);
+  margin: 0;
+}
+
+.ghost-button {
+  --border-color: rgba(201, 162, 39, 0.34);
+  --color: #f4d06f;
+}

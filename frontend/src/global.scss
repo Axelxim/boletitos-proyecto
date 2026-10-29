@@ -1,0 +1,611 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+:root {
+  --boletitos-black: #050505;
+  --boletitos-black-soft: #101010;
+  --boletitos-gold: #c9a227;
+  --boletitos-gold-light: #f4d06f;
+  --boletitos-cream: #fff7e6;
+  --boletitos-ink: #071426;
+}
+
+app-home .home-hero {
+  align-items: stretch;
+  background: linear-gradient(180deg, #111318 0%, #070809 60%, #050505 100%);
+  display: flex;
+  min-height: 520px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+app-home .home-hero__image {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
+}
+
+app-home .home-hero__overlay {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.06) 0%, rgba(5, 5, 5, 0.18) 58%, rgba(5, 5, 5, 0.34) 100%);
+  pointer-events: none;
+  inset: 0;
+  position: absolute;
+}
+
+app-home .section-block {
+  margin: 0 auto;
+  max-width: 1120px;
+}
+
+app-home .eyebrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+app-home .eyebrow {
+  color: var(--boletitos-gold);
+}
+
+app-home .hero-button,
+app-home .card-button {
+  --background: var(--boletitos-gold);
+  --background-activated: var(--boletitos-gold-light);
+  --background-hover: var(--boletitos-gold-light);
+  --border-color: var(--boletitos-gold);
+  --color: var(--boletitos-black);
+  --color-hover: var(--boletitos-black);
+  font-weight: 700;
+}
+
+app-home .hero-button {
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+}
+
+app-home .content-stage {
+  padding: 0 16px 56px;
+  position: relative;
+}
+
+app-home .content-stage__inner {
+  margin: 0 auto;
+  max-width: 1120px;
+  position: relative;
+  z-index: 1;
+}
+
+app-home .content-stage__lights {
+  background:
+    radial-gradient(circle at center, rgba(244, 208, 111, 0.96) 0, rgba(201, 162, 39, 0.54) 24%, rgba(255, 255, 255, 0.08) 44%, transparent 76%);
+  border-radius: 999px;
+  pointer-events: none;
+  position: absolute;
+  top: 36px;
+  width: 10px;
+  z-index: 0;
+}
+
+app-home .content-stage__lights::before,
+app-home .content-stage__lights::after {
+  background:
+    radial-gradient(circle at center, rgba(244, 208, 111, 0.94) 0, rgba(201, 162, 39, 0.5) 26%, rgba(255, 255, 255, 0.06) 44%, transparent 76%);
+  border-radius: 999px;
+  box-shadow:
+    0 28px 0 rgba(244, 208, 111, 0.18),
+    0 56px 0 rgba(244, 208, 111, 0.17),
+    0 84px 0 rgba(244, 208, 111, 0.15),
+    0 112px 0 rgba(244, 208, 111, 0.14),
+    0 140px 0 rgba(244, 208, 111, 0.12),
+    0 168px 0 rgba(244, 208, 111, 0.1),
+    0 196px 0 rgba(244, 208, 111, 0.09),
+    0 224px 0 rgba(244, 208, 111, 0.08),
+    0 252px 0 rgba(244, 208, 111, 0.07),
+    0 280px 0 rgba(244, 208, 111, 0.06),
+    0 308px 0 rgba(244, 208, 111, 0.05),
+    0 336px 0 rgba(244, 208, 111, 0.05),
+    0 364px 0 rgba(244, 208, 111, 0.04);
+  content: '';
+  display: block;
+  height: 10px;
+  margin-bottom: 18px;
+  width: 10px;
+  animation: boletitos-marquee-glow 4.6s ease-in-out infinite;
+}
+
+app-home .content-stage__lights::after {
+  animation-delay: 1.4s;
+}
+
+app-home .content-stage__lights--left {
+  left: max(8px, calc((100vw - 1120px) / 2 - 24px));
+}
+
+app-home .content-stage__lights--right {
+  right: max(8px, calc((100vw - 1120px) / 2 - 24px));
+}
+
+app-home .card-button {
+  --background: transparent;
+  --background-hover: rgba(201, 162, 39, 0.08);
+  --border-color: var(--boletitos-gold);
+  --color: var(--boletitos-gold);
+}
+
+app-home .section-block {
+  padding: 32px 16px 16px;
+}
+
+app-home .home-discovery {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+app-home .search-box input {
+  background: rgba(16, 16, 16, 0.96);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 16px;
+  color: var(--boletitos-cream);
+  font: inherit;
+  outline: none;
+  padding: 14px 16px;
+  width: 100%;
+}
+
+app-home .search-box input::placeholder {
+  color: rgba(255, 247, 230, 0.42);
+}
+
+app-home .filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+app-home .filter-chip {
+  background: rgba(16, 16, 16, 0.92);
+  border: 1px solid rgba(201, 162, 39, 0.24);
+  border-radius: 999px;
+  color: var(--boletitos-cream);
+  cursor: pointer;
+  font: inherit;
+  padding: 10px 14px;
+}
+
+app-home .filter-chip.active {
+  background: var(--boletitos-gold);
+  border-color: var(--boletitos-gold);
+  color: var(--boletitos-black);
+  font-weight: 700;
+}
+
+app-home .section-head {
+  align-items: end;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+app-home .section-head h2 {
+  color: var(--boletitos-cream);
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+app-home .section-head--sub {
+  margin-top: 32px;
+}
+
+app-home .section-link {
+  color: var(--boletitos-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+app-home .featured-carousel {
+  display: grid;
+  gap: 16px;
+}
+
+app-home .featured-poster {
+  align-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(201, 162, 39, 0.16), transparent 24%),
+    linear-gradient(180deg, rgba(20, 20, 20, 0.98), rgba(9, 9, 9, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.32);
+  border-radius: 28px;
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.24);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  min-height: 420px;
+  overflow: hidden;
+  padding: 24px;
+  position: relative;
+}
+
+app-home .featured-poster__image {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
+}
+
+app-home .featured-poster__overlay {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.22) 0%, rgba(5, 5, 5, 0.42) 52%, rgba(5, 5, 5, 0.72) 100%);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+app-home .featured-poster--with-image {
+  background: #0b0b0b;
+}
+
+app-home .featured-poster::after {
+  border: 1px dashed rgba(244, 208, 111, 0.22);
+  border-radius: 22px;
+  content: '';
+  inset: 14px;
+  pointer-events: none;
+  position: absolute;
+}
+
+app-home .featured-poster__content {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 12px 0;
+  position: relative;
+  z-index: 1;
+}
+
+app-home .featured-poster__category {
+  color: var(--boletitos-gold-light);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+app-home .featured-poster__content h3 {
+  color: var(--boletitos-cream);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.96;
+  margin: 0 0 16px;
+  max-width: 720px;
+}
+
+app-home .featured-poster__description {
+  color: rgba(255, 247, 230, 0.78);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0 0 18px;
+  max-width: 720px;
+}
+
+app-home .featured-poster__meta {
+  color: rgba(255, 247, 230, 0.74);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-bottom: 24px;
+}
+
+app-home .featured-poster__meta span {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+app-home .featured-poster__meta span::before {
+  background: var(--boletitos-gold);
+  border-radius: 999px;
+  content: '';
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+}
+
+app-home .carousel-arrow {
+  align-self: center;
+  background: rgba(16, 16, 16, 0.88);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 999px;
+  color: var(--boletitos-cream);
+  cursor: pointer;
+  font-size: 2rem;
+  height: 48px;
+  line-height: 1;
+  width: 48px;
+  z-index: 1;
+}
+
+app-home .carousel-arrow:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+app-home .carousel-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+app-home .carousel-dot {
+  background: rgba(255, 247, 230, 0.2);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  height: 10px;
+  padding: 0;
+  width: 10px;
+}
+
+app-home .carousel-dot.active {
+  background: var(--boletitos-gold);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.14);
+}
+
+app-home .eventos-grid,
+app-home .categorias-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+app-home .eventos-grid--compact {
+  margin-bottom: 28px;
+}
+
+app-home .event-card__media {
+  background:
+    radial-gradient(circle at top right, rgba(201, 162, 39, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(22, 22, 22, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.16);
+  min-height: 190px;
+  overflow: hidden;
+  position: relative;
+}
+
+app-home .event-card__media--image {
+  background: #0c0c0c;
+}
+
+app-home .event-card__image {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
+}
+
+app-home .event-card__placeholder {
+  align-items: center;
+  background:
+    radial-gradient(circle at top center, rgba(201, 162, 39, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(18, 18, 18, 0.98) 0%, rgba(8, 8, 8, 0.98) 100%);
+  display: flex;
+  height: 100%;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+}
+
+app-home .event-card__placeholder-logo {
+  max-width: 140px;
+  opacity: 0.86;
+  width: 52%;
+}
+
+app-home .categorias-block {
+  padding-bottom: 48px;
+}
+
+app-home .trust-strip {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+app-home .trust-strip__item {
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.98), rgba(8, 8, 8, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+app-home .trust-strip__item h3 {
+  color: var(--boletitos-cream);
+  margin: 0 0 8px;
+}
+
+app-home .trust-strip__item p {
+  color: rgba(255, 247, 230, 0.7);
+  margin: 0;
+}
+
+app-home .categoria-item {
+  background: linear-gradient(180deg, #161616 0%, #0f0f0f 100%);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  padding: 20px;
+}
+
+app-home .categoria-item h3 {
+  color: var(--boletitos-cream);
+  margin: 0 0 8px;
+}
+
+app-home .categoria-item p,
+app-home .descripcion {
+  color: rgba(255, 247, 230, 0.72);
+}
+
+app-home .state-box {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 40px 16px;
+  text-align: center;
+}
+
+app-home ion-card {
+  --background: linear-gradient(180deg, #161616 0%, #0f0f0f 100%);
+  --color: var(--boletitos-cream);
+  border: 1px solid rgba(201, 162, 39, 0.24);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+app-home ion-card-subtitle {
+  color: var(--boletitos-gold-light);
+}
+
+app-home ion-card-title {
+  color: var(--boletitos-cream);
+}
+
+app-home ion-card-content p strong {
+  color: var(--boletitos-gold-light);
+}
+
+@media (max-width: 640px) {
+  app-home .home-hero {
+    min-height: 320px;
+  }
+
+  app-home .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  app-home .featured-poster {
+    grid-template-columns: 1fr;
+    min-height: 360px;
+    padding: 20px;
+  }
+
+  app-home .featured-poster__content h3 {
+    font-size: 2rem;
+  }
+
+  app-home .carousel-arrow {
+    bottom: 20px;
+    position: absolute;
+  }
+
+  app-home .carousel-arrow--left {
+    left: 20px;
+  }
+
+  app-home .carousel-arrow--right {
+    right: 20px;
+  }
+
+  app-home .content-stage {
+    padding: 0 14px 40px;
+  }
+
+  app-home .content-stage__lights {
+    top: 24px;
+    width: 8px;
+  }
+
+  app-home .content-stage__lights::before,
+  app-home .content-stage__lights::after {
+    box-shadow:
+      0 24px 0 rgba(244, 208, 111, 0.18),
+      0 48px 0 rgba(244, 208, 111, 0.15),
+      0 72px 0 rgba(244, 208, 111, 0.12),
+      0 96px 0 rgba(244, 208, 111, 0.1),
+      0 120px 0 rgba(244, 208, 111, 0.08),
+      0 144px 0 rgba(244, 208, 111, 0.06);
+    height: 8px;
+    margin-bottom: 14px;
+    width: 8px;
+  }
+
+  app-home .content-stage__lights--left {
+    left: 2px;
+  }
+
+  app-home .content-stage__lights--right {
+    right: 2px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 960px) {
+  app-home .home-hero {
+    min-height: 420px;
+  }
+}
+
+@keyframes boletitos-marquee-glow {
+  0%,
+  100% {
+    opacity: 0.54;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.88;
+    transform: scale(1.06);
+  }
+}

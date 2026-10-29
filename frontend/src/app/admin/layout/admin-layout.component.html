@@ -1,0 +1,48 @@
+<ion-content [fullscreen]="true">
+  <section class="admin-shell">
+    <header class="admin-topbar">
+      <div class="brand-block">
+        <a class="brand-link" routerLink="/admin/dashboard">Boletitos</a>
+        <div>
+          <p class="eyebrow">Backoffice</p>
+          <h1>Panel administrativo</h1>
+        </div>
+      </div>
+
+      <div class="admin-user">
+        <div class="admin-user__meta">
+          <span>{{ currentUserLabel() }}</span>
+          <small>@if (hasSession()) {Acceso administrativo activo} @else {Inicia sesion como administrador para continuar}</small>
+        </div>
+        <ion-button class="logout-button" fill="outline" (click)="salir()">Salir</ion-button>
+      </div>
+    </header>
+
+    <div class="admin-body">
+      <aside class="admin-sidebar">
+        <nav class="admin-nav">
+          @for (item of navItems; track item.label) {
+            @if (item.disabled) {
+              <span class="nav-item nav-item--disabled">{{ item.label }}</span>
+            } @else {
+              <a class="nav-item" [routerLink]="item.path" routerLinkActive="active">{{ item.label }}</a>
+            }
+          }
+        </nav>
+      </aside>
+
+      <main class="admin-main">
+        @if (hasSession()) {
+          <router-outlet></router-outlet>
+        } @else {
+          <section class="admin-locked">
+            <p class="eyebrow">Acceso requerido</p>
+            <h2>El panel administrativo requiere autenticacion</h2>
+            <p>Debes iniciar sesion con una cuenta administradora para acceder al Backoffice.</p>
+            <ion-button class="logout-button" routerLink="/login">Ir a login</ion-button>
+          </section>
+        }
+      </main>
+    </div>
+  </section>
+</ion-content>

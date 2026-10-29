@@ -1,0 +1,129 @@
+<section class="admin-ordenes-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Ordenes</p>
+      <h2>Gestion de compras</h2>
+      <p>Consulta, filtra y revisa las ordenes registradas en la plataforma.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando ordenes...</p>
+    </div>
+  } @else {
+    @if (errorMessage()) {
+      <ion-text color="danger">
+        <p class="feedback">{{ errorMessage() }}</p>
+      </ion-text>
+    }
+
+    @if (successMessage()) {
+      <ion-text color="success">
+        <p class="feedback feedback--success">{{ successMessage() }}</p>
+      </ion-text>
+    }
+
+    <section class="filters-card">
+      <label class="field field--search">
+        <span>Buscar</span>
+        <input
+          type="text"
+          placeholder="Folio, comprador, correo o telefono"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="updateSearchTerm($event)"
+        >
+      </label>
+
+      <label class="field">
+        <span>Estado</span>
+        <select [ngModel]="estadoFilter()" (ngModelChange)="updateEstado($event)">
+          <option value="todos">Todos</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="pagada">Pagada</option>
+          <option value="fallida">Fallida</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Desde</span>
+        <input type="date" [ngModel]="fechaDesde()" (ngModelChange)="updateFechaDesde($event)">
+      </label>
+
+      <label class="field">
+        <span>Hasta</span>
+        <input type="date" [ngModel]="fechaHasta()" (ngModelChange)="updateFechaHasta($event)">
+      </label>
+    </section>
+
+    <section class="table-card">
+      @if (filteredOrdenes().length > 0) {
+        <div class="table-wrap">
+          <table class="ordenes-table">
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Comprador</th>
+                <th>Evento</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Boletos</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (orden of filteredOrdenes(); track orden.id) {
+                <tr>
+                  <td>
+                    <div class="folio-block">
+                      <strong>{{ orden.folio }}</strong>
+                      <small>#{{ orden.id }}</small>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="buyer-block">
+                      <strong>{{ orden.nombre_comprador }}</strong>
+                      <small>{{ orden.correo_comprador }}</small>
+                      <small>{{ orden.telefono_comprador }}</small>
+                    </div>
+                  </td>
+                  <td>{{ getEventoLabel(orden) }}</td>
+                  <td>{{ orden.total | currency:'MXN':'symbol':'1.2-2' }}</td>
+                  <td><span [class]="estadoClass(orden.estado)">{{ orden.estado }}</span></td>
+                  <td>{{ orden.created_at | date:'medium' }}</td>
+                  <td>{{ getCantidadBoletos(orden) }}</td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/admin/ordenes', orden.id]">Ver detalle</a>
+                      <a [routerLink]="['/admin/ordenes', orden.id]" fragment="boletos">Ver boletos</a>
+                      <a class="muted-link">Imprimir</a>
+                      <button
+                        type="button"
+                        class="danger-button"
+                        [disabled]="cancellingId() === orden.id || (orden.estado || '').toLowerCase() !== 'pendiente'"
+                        (click)="cancelarOrden(orden)"
+                      >
+                        @if (cancellingId() === orden.id) {
+                          Cancelando...
+                        } @else {
+                          Cancelar orden
+                        }
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>No hay ordenes que coincidan con los filtros seleccionados.</p>
+        </div>
+      }
+    </section>
+  }
+</section>

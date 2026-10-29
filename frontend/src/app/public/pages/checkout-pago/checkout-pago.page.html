@@ -1,0 +1,83 @@
+<ion-content [fullscreen]="true">
+  <section class="checkout-pago-page">
+    @if (loading()) {
+      <div class="state-box">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando pago...</p>
+      </div>
+    } @else if (!selection()?.orden) {
+      <div class="state-box">
+        <ion-text color="danger">
+          <p>{{ errorMessage() || 'No hay orden disponible para pago.' }}</p>
+        </ion-text>
+      </div>
+    } @else if (selection(); as selectionData) {
+      <div class="payment-grid">
+        <section class="payment-panel">
+          <div class="panel-head">
+            <p class="eyebrow">Resumen</p>
+            <h1>Resumen de compra</h1>
+          </div>
+
+          <div class="summary-card">
+            <strong>{{ selectionData.evento.titulo }}</strong>
+            <span>Folio: {{ selectionData.orden?.folio }}</span>
+            <span>{{ totalBoletos() }} boletos</span>
+            <span>Subtotal: {{ selectionData.subtotal | number:'1.2-2' }}</span>
+            <span>Comision: {{ selectionData.comision | number:'1.2-2' }}</span>
+            <span class="summary-card__total">Total: {{ selectionData.total | number:'1.2-2' }}</span>
+          </div>
+        </section>
+
+        <section class="payment-panel">
+          <div class="panel-head">
+            <p class="eyebrow">Pago</p>
+            <h2>Selecciona tu metodo</h2>
+          </div>
+
+          <div class="payment-methods">
+            <button type="button" [class.active]="paymentMethod() === 'paypal'" (click)="setPaymentMethod('paypal')">PayPal Sandbox</button>
+            @if (canSimulate()) {
+              <button type="button" [class.active]="paymentMethod() === 'simulado'" (click)="setPaymentMethod('simulado')">Pago simulado</button>
+            }
+          </div>
+
+          @if (paymentMethod() === 'paypal') {
+            <div class="paypal-box">
+              <p>Usa el flujo oficial de PayPal Sandbox para aprobar el cargo de prueba.</p>
+              <div #paypalButtonsContainer class="paypal-buttons-container"></div>
+            </div>
+          }
+
+          @if (paymentMethod() === 'simulado' && canSimulate()) {
+            <div class="simulated-box">
+              <p>Disponible solo en development para pruebas internas del flujo sin salir a PayPal.</p>
+              <ion-button class="pay-button" expand="block" [disabled]="!canPay()" (click)="pagarSimulado()">
+                {{ processing() ? 'Procesando pago...' : 'Pagar con flujo simulado' }}
+              </ion-button>
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <ion-text color="danger">
+              <p class="feedback">{{ errorMessage() }}</p>
+            </ion-text>
+          }
+
+          @if (infoMessage()) {
+            <ion-text color="warning">
+              <p class="feedback feedback--info">{{ infoMessage() }}</p>
+            </ion-text>
+          }
+
+          @if (processing()) {
+            <div class="processing-box">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Procesando pago...</p>
+            </div>
+          }
+        </section>
+      </div>
+    }
+  </section>
+</ion-content>

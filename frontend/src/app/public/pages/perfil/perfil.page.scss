@@ -1,0 +1,142 @@
+:host {
+  display: block;
+}
+
+.perfil-page {
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: 24px 16px 48px;
+}
+
+.eyebrow {
+  color: #c9a227;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.page-head h1,
+.section-head h2,
+.field span,
+.feedback,
+.meta-grid strong {
+  color: #fff7e6;
+  margin: 0;
+}
+
+.page-head p,
+.meta-grid span {
+  color: rgba(255, 247, 230, 0.72);
+  margin: 0;
+}
+
+.perfil-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.panel-card {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(9, 9, 9, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 24px;
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.loading-card {
+  justify-items: center;
+}
+
+.section-head {
+  align-items: start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field input {
+  background: rgba(11, 11, 11, 0.94);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 14px;
+  color: #fff7e6;
+  font: inherit;
+  padding: 14px 16px;
+}
+
+.field input[readonly] {
+  opacity: 0.75;
+}
+
+.meta-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.meta-grid > div {
+  display: grid;
+  gap: 6px;
+}
+
+.status-chip {
+  background: rgba(45, 112, 62, 0.18);
+  border: 1px solid rgba(88, 184, 111, 0.24);
+  border-radius: 999px;
+  color: #d7f3dc;
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+
+.status-chip--warning {
+  background: rgba(110, 88, 23, 0.18);
+  border-color: rgba(201, 162, 39, 0.24);
+  color: #f4d06f;
+}
+
+.feedback {
+  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.feedback--success {
+  color: #f4d06f;
+}
+
+.primary-button {
+  --background: #c9a227;
+  --color: #050505;
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .perfil-grid,
+  .form-grid,
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+}

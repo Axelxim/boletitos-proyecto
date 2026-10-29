@@ -1,0 +1,32 @@
+<ion-content [fullscreen]="true">
+  <section class="success-page">
+    <div class="success-card">
+      <p class="eyebrow">Compra exitosa</p>
+      <h1>Tu pago fue procesado correctamente</h1>
+      <p>La orden quedo registrada y los boletos ya fueron procesados para el comprador.</p>
+
+      @if (completedPurchase) {
+        <div class="success-summary">
+          <div><span>Folio</span><strong>{{ completedPurchase.folio }}</strong></div>
+          <div><span>Estado</span><strong>{{ completedPurchase.estado }}</strong></div>
+          <div><span>Total</span><strong>{{ completedPurchase.total | number:'1.2-2' }}</strong></div>
+          <div><span>Referencia PayPal</span><strong>{{ completedPurchase.referenciaPago }}</strong></div>
+          <div><span>Boletos generados</span><strong>{{ completedPurchase.cantidadBoletos }}</strong></div>
+          <div><span>Correo</span><strong>{{ completedPurchase.correoEnviado ? 'Enviado' : 'Pendiente / fallo' }}</strong></div>
+        </div>
+      }
+
+      @if (!isAuthenticated()) {
+        <p class="success-note">
+          Crea una cuenta con este correo para consultar tus boletos mas facilmente.
+        </p>
+      }
+
+      <div class="success-actions">
+        <ion-button class="success-button" routerLink="/mis-boletos">Ir a Mis boletos</ion-button>
+        <ion-button class="success-button" routerLink="/eventos">Volver a eventos</ion-button>
+        <ion-button class="success-button success-button--ghost" routerLink="/home">Ir al inicio</ion-button>
+      </div>
+    </div>
+  </section>
+</ion-content>

@@ -1,0 +1,134 @@
+<section class="admin-evento-imagenes-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Eventos</p>
+      <h2>Imagenes del evento</h2>
+      <p>@if (evento()) { {{ evento()?.titulo }} } @else { Administracion visual del evento }</p>
+    </div>
+
+    <div class="head-actions">
+      <ion-button class="ghost-button" fill="outline" routerLink="/admin/eventos">Volver al listado</ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando imagenes...</p>
+    </div>
+  } @else if (errorMessage() && !evento()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    @if (errorMessage()) {
+      <ion-text color="danger">
+        <p class="feedback">{{ errorMessage() }}</p>
+      </ion-text>
+    }
+
+    @if (successMessage()) {
+      <ion-text color="success">
+        <p class="feedback feedback--success">{{ successMessage() }}</p>
+      </ion-text>
+    }
+
+    <section class="image-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">1. Portada</p>
+          <h3>Portada principal</h3>
+        </div>
+        <label class="upload-label">
+          <input type="file" accept="image/*" (change)="cambiarPortada($event)">
+          <span>Cambiar portada</span>
+        </label>
+      </div>
+
+      <div class="single-image-card">
+        @if (portada(); as image) {
+          <img [src]="image.url" [alt]="getFileName(image)">
+          <div class="single-image-meta">
+            <strong>{{ getFileName(image) }}</strong>
+            <span>{{ image.created_at | date:'medium' }}</span>
+            <ion-button class="danger-button" fill="outline" (click)="eliminarImagen(image)">Eliminar</ion-button>
+          </div>
+        } @else {
+          <div class="empty-box">No hay portada cargada.</div>
+        }
+      </div>
+    </section>
+
+    <section class="image-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">2. Banner</p>
+          <h3>Banner principal</h3>
+        </div>
+        <label class="upload-label">
+          <input type="file" accept="image/*" (change)="cambiarBanner($event)">
+          <span>Cambiar banner</span>
+        </label>
+      </div>
+
+      <div class="single-image-card">
+        @if (banner(); as image) {
+          <img [src]="image.url" [alt]="getFileName(image)">
+          <div class="single-image-meta">
+            <strong>{{ getFileName(image) }}</strong>
+            <span>{{ image.created_at | date:'medium' }}</span>
+            <ion-button class="danger-button" fill="outline" (click)="eliminarImagen(image)">Eliminar</ion-button>
+          </div>
+        } @else {
+          <div class="empty-box">No hay banner cargado.</div>
+        }
+      </div>
+    </section>
+
+    <section class="image-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">3. Galeria</p>
+          <h3>Galeria del evento</h3>
+        </div>
+        <label class="upload-label">
+          <input type="file" accept="image/*" multiple (change)="agregarGaleria($event)">
+          <span>Agregar imagenes</span>
+        </label>
+      </div>
+
+      @if (uploading()) {
+        <div class="inline-loading">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Subiendo imagenes...</p>
+        </div>
+      }
+
+      @if (galeria().length > 0) {
+        <div class="gallery-grid">
+          @for (image of galeria(); track image.id) {
+            <article class="gallery-card">
+              <img [src]="image.url" [alt]="getFileName(image)">
+              <div class="gallery-card__content">
+                <strong>{{ getFileName(image) }}</strong>
+                <span>{{ image.created_at | date:'mediumDate' }}</span>
+
+                <label class="order-field">
+                  <span>Orden</span>
+                  <input type="number" min="0" [value]="ordenForm()[image.id]" (input)="updateOrden(image.id, $event)">
+                </label>
+
+                <div class="gallery-actions">
+                  <ion-button class="ghost-button" fill="outline" (click)="guardarOrden(image)">Guardar orden</ion-button>
+                  <ion-button class="danger-button" fill="outline" (click)="eliminarImagen(image)">Eliminar</ion-button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-box">No hay imagenes de galeria cargadas.</div>
+      }
+    </section>
+  }
+</section>

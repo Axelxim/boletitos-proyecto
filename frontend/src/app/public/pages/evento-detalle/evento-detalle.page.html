@@ -1,0 +1,140 @@
+<ion-content [fullscreen]="true">
+  <section class="evento-detalle-page">
+    @if (loading()) {
+      <div class="state-box">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando evento...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="state-box">
+        <ion-text color="danger">
+          <p>{{ errorMessage() }}</p>
+        </ion-text>
+      </div>
+    } @else if (evento(); as eventoData) {
+      <section class="detalle-hero" [class.detalle-hero--image]="!!heroImageUrl()">
+        @if (heroImageUrl(); as heroUrl) {
+          <img [src]="heroUrl" [alt]="'Imagen de ' + eventoData.titulo" class="detalle-hero__image">
+        }
+        <div class="detalle-hero__overlay"></div>
+
+        <div class="detalle-hero__content">
+          @if (eventoData.categoria?.nombre) {
+            <p class="eyebrow">{{ eventoData.categoria?.nombre }}</p>
+          }
+          <h1>{{ eventoData.titulo }}</h1>
+          <div class="detalle-meta">
+            <span>{{ eventoData.fecha_inicio | date:'fullDate' }}</span>
+            <span>{{ eventoData.lugar }}</span>
+            @if (eventoData.sede?.nombre) {
+              <span>{{ eventoData.sede?.nombre }}</span>
+            }
+          </div>
+          <p class="detalle-descripcion">{{ eventoData.descripcion || 'Sin descripcion disponible.' }}</p>
+        </div>
+      </section>
+
+      <section class="detalle-grid">
+        <article class="detalle-panel detalle-panel--info">
+          <div class="panel-head">
+            <p class="eyebrow">Informacion</p>
+            <h2>Detalle del evento</h2>
+          </div>
+
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">Fecha de inicio</span>
+              <strong>{{ eventoData.fecha_inicio | date:'medium' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha de fin</span>
+              <strong>{{ eventoData.fecha_fin | date:'medium' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Lugar</span>
+              <strong>{{ eventoData.lugar }}</strong>
+            </div>
+            @if (eventoData.sede?.nombre) {
+              <div class="info-item">
+                <span class="info-label">Sede</span>
+                <strong>{{ eventoData.sede?.nombre }}</strong>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="detalle-panel detalle-panel--tickets">
+          <div class="panel-head">
+            <p class="eyebrow">Boletos</p>
+            <h2>Tipos disponibles</h2>
+          </div>
+
+          @if (tiposBoletos().length === 0) {
+            <div class="empty-box">
+              <p>Este evento aun no tiene tipos de boletos disponibles.</p>
+            </div>
+          } @else {
+            <div class="tickets-list">
+              @for (tipo of tiposBoletos(); track tipo.id) {
+                <article class="ticket-card">
+                  <div class="ticket-card__header">
+                    <div>
+                      <h3>{{ tipo.nombre }}</h3>
+                      <p>{{ tipo.descripcion || 'Boleto disponible para este evento.' }}</p>
+                    </div>
+                    <strong class="ticket-card__price">{{ tipo.precio | number:'1.2-2' }}</strong>
+                  </div>
+
+                  <div class="ticket-card__meta">
+                    <span>Disponibles: {{ tipo.cantidad_disponible }}</span>
+                    <span>Max por compra: {{ maximoSeleccionable(tipo) }}</span>
+                  </div>
+
+                  <label class="ticket-card__quantity">
+                    <span>Cantidad</span>
+                    <div class="quantity-stepper">
+                      <button
+                        type="button"
+                        class="quantity-stepper__button"
+                        [disabled]="cantidades()[tipo.id] <= 0"
+                        (click)="cambiarCantidad(tipo.id, -1, maximoSeleccionable(tipo))">
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min="0"
+                        [max]="maximoSeleccionable(tipo)"
+                        [value]="cantidades()[tipo.id]"
+                        (input)="actualizarCantidad(tipo.id, $event, maximoSeleccionable(tipo))">
+                      <button
+                        type="button"
+                        class="quantity-stepper__button"
+                        [disabled]="cantidades()[tipo.id] >= maximoSeleccionable(tipo)"
+                        (click)="cambiarCantidad(tipo.id, 1, maximoSeleccionable(tipo))">
+                        +
+                      </button>
+                    </div>
+                  </label>
+                </article>
+              }
+            </div>
+
+            <div class="purchase-box">
+              <div>
+                <span class="purchase-box__label">Boletos seleccionados</span>
+                <strong>{{ totalSeleccionado() }}</strong>
+              </div>
+              <div>
+                <span class="purchase-box__label">Total estimado</span>
+                <strong>{{ montoSeleccionado() | number:'1.2-2' }}</strong>
+              </div>
+              <ion-button class="purchase-button" expand="block" [disabled]="totalSeleccionado() === 0" (click)="continuarCompra()">
+                Continuar compra
+              </ion-button>
+            </div>
+          }
+        </article>
+      </section>
+    }
+  </section>
+</ion-content>

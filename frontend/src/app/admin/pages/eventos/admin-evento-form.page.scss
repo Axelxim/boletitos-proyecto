@@ -1,0 +1,128 @@
+.admin-evento-form-page {
+  display: grid;
+  gap: 22px;
+}
+
+.page-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  color: #c9a227;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.page-head h2,
+.section-head h3,
+.feedback,
+.state-box p {
+  color: #fff7e6;
+  margin: 0;
+}
+
+.page-head p,
+.section-head p {
+  color: rgba(255, 247, 230, 0.72);
+  margin: 0;
+}
+
+.head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ghost-button {
+  --border-color: rgba(201, 162, 39, 0.34);
+  --color: #f4d06f;
+}
+
+.save-button {
+  --background: #c9a227;
+  --background-hover: #f4d06f;
+  --background-activated: #f4d06f;
+  --color: #050505;
+  font-weight: 800;
+}
+
+.form-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.form-card {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(9, 9, 9, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 24px;
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.section-head {
+  display: grid;
+  gap: 6px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: rgba(255, 247, 230, 0.8);
+  font-size: 0.92rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  background: rgba(11, 11, 11, 0.94);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 14px;
+  color: #fff7e6;
+  font: inherit;
+  outline: none;
+  padding: 14px 16px;
+  width: 100%;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field small {
+  color: #ef9a9a;
+  font-size: 0.8rem;
+}
+
+.state-box {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 36px 20px;
+}
+
+@media (max-width: 860px) {
+  .page-head,
+  .form-grid--two {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+}

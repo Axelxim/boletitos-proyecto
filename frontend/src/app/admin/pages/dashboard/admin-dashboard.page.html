@@ -1,0 +1,33 @@
+<section class="dashboard-page">
+  <div class="page-head">
+    <p class="eyebrow">Resumen</p>
+    <h2>Dashboard administrativo</h2>
+    <p>Vista general del movimiento operativo de Boletitos.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando resumen...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    <div class="stats-grid">
+      @for (stat of stats(); track stat.label) {
+        <article class="stat-card">
+          <span>{{ stat.label }}</span>
+          <strong [class.stat-card__value--currency]="stat.currency">
+            @if (stat.currency) {
+              {{ stat.value | currency:'MXN':'symbol':'1.2-2' }}
+            } @else {
+              {{ stat.value | number:'1.0-0' }}
+            }
+          </strong>
+        </article>
+      }
+    </div>
+  }
+</section>

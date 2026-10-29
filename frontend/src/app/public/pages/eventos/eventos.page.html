@@ -1,0 +1,100 @@
+<ion-content [fullscreen]="true">
+  <section class="eventos-page">
+    <div class="page-head">
+      <p class="eyebrow">Cartelera</p>
+      <h1>Encuentra tu proximo evento</h1>
+      <p>Consulta los eventos publicados, filtra por categoria y elige el que quieres comprar.</p>
+    </div>
+
+    <div class="eventos-discovery">
+      <div class="search-box">
+        <input
+          type="search"
+          placeholder="Buscar por evento, descripcion o lugar"
+          [value]="searchTerm()"
+          (input)="updateSearchTerm($event)">
+      </div>
+
+      @if (categorias().length > 0) {
+        <div class="filter-chips">
+          <button
+            type="button"
+            class="filter-chip"
+            [class.active]="selectedCategoryId() === null"
+            (click)="selectCategory(null)">
+            Todas
+          </button>
+
+          @for (categoria of categorias(); track categoria.id) {
+            <button
+              type="button"
+              class="filter-chip"
+              [class.active]="selectedCategoryId() === categoria.id"
+              (click)="selectCategory(categoria.id)">
+              {{ categoria.nombre }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="state-box">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando eventos...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="state-box">
+        <ion-text color="danger">
+          <p>{{ errorMessage() }}</p>
+        </ion-text>
+      </div>
+    } @else if (filteredEventos().length === 0) {
+      <div class="state-box">
+        <p>No encontramos eventos con esos filtros.</p>
+      </div>
+    } @else {
+      <div class="eventos-grid">
+        @for (evento of filteredEventos(); track evento.id) {
+          <ion-card>
+            <div class="event-card__media" [class.event-card__media--image]="!!coverUrl(evento)">
+              @if (coverUrl(evento); as coverUrlValue) {
+                <img
+                  [src]="coverUrlValue"
+                  [alt]="'Portada de ' + evento.titulo"
+                  class="event-card__image">
+              } @else {
+                <div class="event-card__placeholder">
+                  <img src="assets/img/Boletitoslogo.png" alt="Boletitos" class="event-card__placeholder-logo">
+                </div>
+              }
+            </div>
+
+            <ion-card-header>
+              @if (evento.categoria?.nombre) {
+                <ion-card-subtitle>{{ evento.categoria?.nombre }}</ion-card-subtitle>
+              }
+              <ion-card-title>{{ evento.titulo }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <div class="event-card__body">
+                <div class="event-card__meta">
+                  <p><strong>Fecha:</strong> {{ evento.fecha_inicio | date:'mediumDate' }}</p>
+                  <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+                  @if (evento.sede?.nombre) {
+                    <p><strong>Sede:</strong> {{ evento.sede?.nombre }}</p>
+                  }
+                </div>
+
+                <ion-button expand="block" fill="outline" [routerLink]="['/eventos', evento.id]">
+                  Ver evento
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+      </div>
+    }
+  </section>
+</ion-content>

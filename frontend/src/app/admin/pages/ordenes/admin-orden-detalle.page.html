@@ -1,0 +1,165 @@
+<section class="admin-orden-detalle-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Orden</p>
+      <h2>Detalle de compra</h2>
+      <p>
+        @if (orden()) {
+          {{ orden()?.folio }}
+        } @else {
+          Consulta completa de la orden
+        }
+      </p>
+    </div>
+
+    <ion-button class="ghost-button" fill="outline" routerLink="/admin/ordenes">Volver a ordenes</ion-button>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando detalle...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else if (orden(); as currentOrden) {
+    <div class="detail-grid">
+      <section class="info-card">
+        <p class="eyebrow">Comprador</p>
+        <h3>{{ currentOrden.nombre_comprador }}</h3>
+        <dl>
+          <div>
+            <dt>Correo</dt>
+            <dd>{{ currentOrden.correo_comprador }}</dd>
+          </div>
+          <div>
+            <dt>Telefono</dt>
+            <dd>{{ currentOrden.telefono_comprador }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="info-card">
+        <p class="eyebrow">Evento</p>
+        <div class="event-hero">
+          @if (currentOrden.evento?.imagen) {
+            <img [src]="currentOrden.evento?.imagen" [alt]="currentOrden.evento?.titulo || 'Evento'">
+          } @else {
+            <div class="event-placeholder">Boletitos</div>
+          }
+          <div class="event-copy">
+            <h3>{{ currentOrden.evento?.titulo || 'Evento sin referencia' }}</h3>
+            <p>{{ currentOrden.evento?.fecha_inicio | date:'medium' }}</p>
+            <p>{{ currentOrden.evento?.sede?.nombre || currentOrden.evento?.lugar || 'Sede pendiente' }}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="info-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Compra</p>
+          <h3>Resumen de boletos</h3>
+        </div>
+        <span [class]="estadoClass(currentOrden.estado)">{{ currentOrden.estado }}</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="detalles-table">
+          <thead>
+            <tr>
+              <th>Boleto</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (detalle of detalles; track detalle.id) {
+              <tr>
+                <td>
+                  <div class="ticket-block">
+                    <strong>{{ detalle.tipo_boleto?.nombre || 'Tipo sin nombre' }}</strong>
+                    <small>{{ detalle.evento?.titulo || currentOrden.evento?.titulo }}</small>
+                  </div>
+                </td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>{{ detalle.precio_unitario | currency:'MXN':'symbol':'1.2-2' }}</td>
+                <td>{{ detalle.subtotal | currency:'MXN':'symbol':'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="totals-grid">
+        <article>
+          <span>Folio</span>
+          <strong>{{ currentOrden.folio }}</strong>
+        </article>
+        <article>
+          <span>Subtotal</span>
+          <strong>{{ currentOrden.subtotal | currency:'MXN':'symbol':'1.2-2' }}</strong>
+        </article>
+        <article>
+          <span>Comision</span>
+          <strong>{{ currentOrden.comision | currency:'MXN':'symbol':'1.2-2' }}</strong>
+        </article>
+        <article>
+          <span>Total</span>
+          <strong>{{ currentOrden.total | currency:'MXN':'symbol':'1.2-2' }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="info-card" id="boletos">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Boletos generados</p>
+          <h3>Accesos emitidos</h3>
+        </div>
+      </div>
+
+      @if (boletos.length > 0) {
+        <div class="boletos-grid">
+          @for (boleto of boletos; track boleto.id) {
+            <article class="boleto-card">
+              <div>
+                <strong>{{ boleto.folio }}</strong>
+                <p>{{ boleto.tipo_boleto?.nombre || 'Boleto' }}</p>
+              </div>
+              <span [class]="estadoClass(boleto.estado)">{{ boleto.estado }}</span>
+              <ion-button class="ghost-button" fill="outline" (click)="openQr(boleto)">Ver QR</ion-button>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>Esta orden aun no tiene boletos generados.</p>
+        </div>
+      }
+    </section>
+
+    @if (selectedQr(); as boletoQr) {
+      <div class="modal-backdrop" (click)="closeQr()"></div>
+      <section class="qr-modal" aria-modal="true" role="dialog">
+        <div class="qr-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">QR provisional</p>
+              <h3>{{ boletoQr.folio }}</h3>
+            </div>
+            <ion-button class="ghost-button" fill="outline" (click)="closeQr()">Cerrar</ion-button>
+          </div>
+
+          <div class="qr-box">
+            <p>{{ boletoQr.codigo_qr }}</p>
+          </div>
+        </div>
+      </section>
+    }
+  }
+</section>

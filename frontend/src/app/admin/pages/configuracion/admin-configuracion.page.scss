@@ -1,0 +1,174 @@
+.config-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.page-head h2,
+.state-box p,
+.feedback,
+.section-head h3,
+.field span,
+.info-card strong {
+  color: #fff7e6;
+  margin: 0;
+}
+
+.page-head p,
+.section-head p,
+.field small,
+.info-box p,
+.info-card span {
+  color: rgba(255, 247, 230, 0.72);
+  margin: 0;
+}
+
+.eyebrow {
+  color: #c9a227;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin-bottom: 8px !important;
+  text-transform: uppercase;
+}
+
+.config-layout {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.tabs-panel,
+.section-panel,
+.state-box,
+.info-box,
+.info-card {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(9, 9, 9, 0.98));
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 24px;
+}
+
+.tabs-panel {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  padding: 1rem;
+}
+
+.tab-button {
+  background: transparent;
+  border: 1px solid rgba(201, 162, 39, 0.14);
+  border-radius: 18px;
+  color: rgba(255, 247, 230, 0.72);
+  cursor: pointer;
+  font: inherit;
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.tab-button--active {
+  background: rgba(201, 162, 39, 0.12);
+  border-color: rgba(201, 162, 39, 0.28);
+  color: #f4d06f;
+}
+
+.section-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field textarea,
+.field select {
+  background: rgba(11, 11, 11, 0.94);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: 16px;
+  color: #fff7e6;
+  font: inherit;
+  padding: 14px 16px;
+}
+
+.field-error {
+  color: #ef9a9a !important;
+}
+
+.feedback {
+  background: rgba(133, 32, 32, 0.16);
+  border: 1px solid rgba(229, 57, 53, 0.28);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.feedback--info {
+  background: rgba(201, 162, 39, 0.08);
+  border-color: rgba(201, 162, 39, 0.22);
+  color: #f4d06f;
+}
+
+.info-box {
+  padding: 1rem;
+}
+
+.info-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.info-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.ghost-button {
+  --border-color: rgba(201, 162, 39, 0.34);
+  --color: #f4d06f;
+}
+
+.save-button {
+  --background: #c9a227;
+  --background-hover: #f4d06f;
+  --color: #050505;
+  font-weight: 800;
+}
+
+.state-box {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 36px 20px;
+}
+
+@media (max-width: 980px) {
+  .config-layout,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs-panel {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}

@@ -1,0 +1,108 @@
+<section class="admin-boleto-detalle-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Boletos</p>
+      <h2>Detalle del boleto</h2>
+      <p>Consulta la informacion individual del acceso emitido y navega a su orden asociada.</p>
+    </div>
+
+    <div class="head-actions">
+      <a class="back-link" routerLink="/admin/boletos">Volver al listado</a>
+      @if (boleto()?.orden?.id) {
+        <ion-button class="order-button" [routerLink]="['/admin/ordenes', boleto()?.orden?.id]">VER ORDEN</ion-button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando boleto...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else if (boletoEnriquecido(); as detalle) {
+    <section class="ticket-card">
+      <div class="ticket-card__main">
+        <div>
+          <p class="ticket-label">Folio</p>
+          <h3>{{ detalle.folio }}</h3>
+        </div>
+
+        <span [class]="estadoClass(detalle.estado)">{{ detalle.estado }}</span>
+      </div>
+
+      <div class="ticket-grid">
+        <article class="info-card" id="qr">
+          <p class="card-label">Codigo QR</p>
+          <div class="qr-placeholder">
+            <span>QR</span>
+            <strong>{{ detalle.codigo_qr }}</strong>
+          </div>
+          <div class="placeholder-actions">
+            <button type="button" disabled>Descargar</button>
+            <button type="button" disabled>Imprimir</button>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Boleto</p>
+          <strong>Fecha de emision</strong>
+          <small>{{ detalle.created_at | date:'medium' }}</small>
+          <strong>Fecha de uso</strong>
+          <small>{{ detalle.fecha_uso ? (detalle.fecha_uso | date:'medium') : 'Sin uso registrado' }}</small>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Evento</p>
+          @if (detalle.evento_detalle?.imagen) {
+            <img class="event-image" [src]="detalle.evento_detalle?.imagen" [alt]="detalle.evento_detalle?.titulo || 'Evento'">
+          } @else {
+            <div class="event-image event-image--placeholder">Boletitos</div>
+          }
+          <strong>{{ detalle.evento_detalle?.titulo || detalle.evento?.titulo || 'Evento sin referencia' }}</strong>
+          <small>Fecha: {{ detalle.evento_detalle?.fecha_inicio | date:'medium' }}</small>
+          <small>Sede: {{ detalle.evento_detalle?.sede?.nombre || 'No disponible' }}</small>
+          <small>Lugar: {{ detalle.evento_detalle?.lugar || 'No disponible' }}</small>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Tipo de boleto</p>
+          <strong>{{ detalle.tipo_boleto_detalle?.nombre || detalle.tipo_boleto?.nombre || 'Tipo sin referencia' }}</strong>
+          <small>Precio: {{ detalle.tipo_boleto_detalle?.precio ?? detalle.tipo_boleto?.precio ?? 'No disponible' }}</small>
+          <small>Descripcion: {{ detalle.tipo_boleto_detalle?.descripcion || 'Sin descripcion' }}</small>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Comprador</p>
+          <strong>{{ detalle.comprador?.nombre || 'No disponible' }}</strong>
+          <small>Correo: {{ detalle.comprador?.correo || 'No disponible' }}</small>
+          <small>Telefono: {{ detalle.comprador?.telefono || 'No disponible' }}</small>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Orden</p>
+          @if (detalle.orden_detalle?.id) {
+            <strong>{{ detalle.orden_detalle?.folio }}</strong>
+            <small>Estado: {{ detalle.orden_detalle?.estado }}</small>
+            <small>Subtotal: {{ detalle.orden_detalle?.subtotal }}</small>
+            <small>Comision: {{ detalle.orden_detalle?.comision }}</small>
+            <small>Total: {{ detalle.orden_detalle?.total }}</small>
+            <a class="inline-link" [routerLink]="['/admin/ordenes', detalle.orden_detalle?.id]">Abrir orden asociada</a>
+          } @else {
+            <strong>Sin orden asociada</strong>
+          }
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">Historial de validaciones</p>
+          <strong>No disponible</strong>
+          <small>La API actual de boletos no incluye historial de validaciones.</small>
+          <small>Puede integrarse despues sobre el endpoint admin de detalle.</small>
+        </article>
+      </div>
+    </section>
+  }
+</section>

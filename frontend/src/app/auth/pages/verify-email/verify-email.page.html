@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true">
+  <section class="verify-page">
+    <article class="verify-card">
+      <p class="eyebrow">Boletitos</p>
+      <h1>Verificacion de correo</h1>
+
+      @if (state() === 'loading') {
+        <div class="loading-box">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>{{ message() }}</p>
+        </div>
+      } @else {
+        <div class="status-box" [class.status-box--success]="state() === 'success'" [class.status-box--warning]="state() === 'expired'">
+          <h2>
+            @switch (state()) {
+              @case ('success') { Verificacion correcta }
+              @case ('expired') { Enlace expirado }
+              @default { Enlace invalido }
+            }
+          </h2>
+          <p>{{ message() }}</p>
+        </div>
+
+        <div class="actions">
+          <ion-button class="primary-button" routerLink="/login">Ir a login</ion-button>
+          @if (state() !== 'success') {
+            <ion-button class="ghost-button" fill="outline" routerLink="/registro">Volver a registro</ion-button>
+          }
+        </div>
+      }
+    </article>
+  </section>
+</ion-content>

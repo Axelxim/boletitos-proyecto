@@ -1,0 +1,81 @@
+<section class="admin-eventos-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Eventos</p>
+      <h2>Gestion de eventos</h2>
+      <p>Listado administrativo preparado para revisar eventos y navegar a las acciones principales del Backoffice.</p>
+    </div>
+
+    <div class="head-actions">
+      <div class="summary-pills">
+        <span>Total: {{ summary().total }}</span>
+        <span>Publicados: {{ summary().publicados }}</span>
+        <span>Otros estados: {{ summary().otros }}</span>
+      </div>
+
+      <ion-button class="new-button" routerLink="/admin/eventos/nuevo">NUEVO EVENTO</ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando eventos...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    <div class="table-wrap">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>Portada</th>
+            <th>Titulo</th>
+            <th>Categoria</th>
+            <th>Sede / lugar</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (evento of eventos(); track evento.id) {
+            <tr>
+              <td>
+                @if (portadaUrl(evento); as portada) {
+                  <img class="event-thumb" [src]="portada" [alt]="evento.titulo">
+                } @else {
+                  <div class="event-thumb event-thumb--placeholder">Boletitos</div>
+                }
+              </td>
+              <td>
+                <div class="event-title">
+                  <strong>{{ evento.titulo }}</strong>
+                  <small>{{ evento.descripcion || 'Sin descripcion breve' }}</small>
+                  <span>#{{ evento.id }}</span>
+                </div>
+              </td>
+              <td>{{ evento.categoria?.nombre || 'Sin categoria' }}</td>
+              <td>{{ evento.sede?.nombre || evento.lugar || 'Sin sede' }}</td>
+              <td>{{ evento.fecha_inicio | date:'mediumDate' }}</td>
+              <td>{{ evento.fecha_fin | date:'mediumDate' }}</td>
+              <td><span [class]="estadoClass(evento)">{{ estadoLabel(evento) }}</span></td>
+              <td>
+                <div class="actions">
+                  <a [routerLink]="['/eventos', evento.id]">Ver</a>
+                  <a [routerLink]="['/admin/eventos', evento.id, 'editar']">Editar</a>
+                  <a [routerLink]="['/admin/eventos', evento.id, 'imagenes']">Imagenes</a>
+                  <a [routerLink]="['/admin/eventos', evento.id, 'boletos']">Boletos</a>
+                  <a [routerLink]="['/admin/eventos', evento.id]">Eliminar</a>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

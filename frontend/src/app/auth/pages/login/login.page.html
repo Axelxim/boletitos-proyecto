@@ -1,0 +1,75 @@
+<ion-content [fullscreen]="true">
+  <section class="auth-page">
+    <div class="auth-shell">
+      <div class="auth-copy">
+        <p class="eyebrow">Boletitos</p>
+        <h1>Inicia sesion</h1>
+        <p>Accede con tu cuenta para consultar tus boletos, continuar compras o entrar al panel administrativo si tu rol lo permite.</p>
+        <div class="auth-links">
+          <a class="back-link" routerLink="/eventos">Volver al sitio publico</a>
+          <a class="back-link" routerLink="/registro">¿No tienes cuenta? Registrate</a>
+        </div>
+      </div>
+
+      <section class="auth-card">
+        <div class="panel-head">
+          <p class="eyebrow">Acceso</p>
+          <h2>Entrar a Boletitos</h2>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Correo</span>
+            <input type="email" [value]="form().correo" (input)="updateField('correo', $event)" placeholder="tu@correo.com">
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <div class="password-field">
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                [value]="form().password"
+                (input)="updateField('password', $event)"
+                placeholder="Tu contraseña"
+              >
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+                {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+          </label>
+        </div>
+
+        @if (errorMessage()) {
+          <ion-text color="danger">
+            <p class="feedback">{{ errorMessage() }}</p>
+          </ion-text>
+        }
+
+        @if (infoMessage()) {
+          <ion-text color="warning">
+            <p class="feedback feedback--info">{{ infoMessage() }}</p>
+          </ion-text>
+        }
+
+        @if (canResendVerification()) {
+          <div class="auth-links auth-links--actions">
+            <button type="button" class="back-link action-link" [disabled]="submitting()" (click)="reenviarVerificacion()">
+              Reenviar correo de verificacion
+            </button>
+          </div>
+        }
+
+        <ion-button class="auth-button" expand="block" [disabled]="!canSubmit()" (click)="iniciarSesion()">
+          {{ submitting() ? 'Entrando...' : 'Iniciar sesion' }}
+        </ion-button>
+
+        @if (submitting()) {
+          <div class="loading-box">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Validando acceso...</p>
+          </div>
+        }
+      </section>
+    </div>
+  </section>
+</ion-content>

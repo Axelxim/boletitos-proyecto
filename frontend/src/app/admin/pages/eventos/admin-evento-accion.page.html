@@ -1,0 +1,18 @@
+<ion-content [fullscreen]="true">
+  <section class="admin-evento-accion">
+    <p class="eyebrow">Eventos</p>
+    <h2>{{ pageTitle() }}</h2>
+    <div class="placeholder-card">
+      <strong>{{ actionLabel() }}</strong>
+      @if (eventoId()) {
+        <span>Evento #{{ eventoId() }}</span>
+      } @else {
+        <span>Nuevo evento</span>
+      }
+      <p>Esta ruta ya quedó preparada en el Backoffice. Aquí conectaremos el formulario o la gestión específica en la siguiente etapa.</p>
+      <div class="placeholder-actions">
+        <ion-button class="ghost-button" fill="outline" routerLink="/admin/eventos">Volver al listado</ion-button>
+      </div>
+    </div>
+  </section>
+</ion-content>

@@ -1,0 +1,254 @@
+.admin-boletos-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+
+  h2 {
+    margin: 0.25rem 0 0.5rem;
+    color: #fff7e6;
+    font-size: clamp(2rem, 3vw, 2.6rem);
+  }
+
+  p {
+    margin: 0;
+    color: rgba(255, 247, 230, 0.78);
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  color: #c9a227;
+  text-transform: uppercase;
+  letter-spacing: 0.22rem;
+  font-weight: 700;
+}
+
+.filters-card,
+.table-card,
+.state-box,
+.empty-box {
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  border-radius: 1.75rem;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.98), rgba(11, 11, 11, 0.98));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.filters-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.55rem;
+
+  span {
+    color: #f4d06f;
+    font-size: 0.84rem;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+  }
+
+  input,
+  select {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgba(201, 162, 39, 0.28);
+    background: rgba(7, 7, 7, 0.92);
+    color: #fff7e6;
+    padding: 0.95rem 1rem;
+    outline: none;
+  }
+
+  input:disabled {
+    color: rgba(255, 247, 230, 0.45);
+    cursor: not-allowed;
+  }
+}
+
+.api-note,
+.feedback {
+  margin: 0;
+  color: rgba(255, 247, 230, 0.78);
+}
+
+.table-card {
+  padding: 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.cards-wrap {
+  display: none;
+}
+
+.boletos-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1240px;
+
+  th,
+  td {
+    padding: 1rem 0.9rem;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.12);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    color: #f4d06f;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    font-weight: 700;
+  }
+
+  td {
+    color: #fff7e6;
+  }
+}
+
+.folio-block,
+.buyer-block {
+  display: grid;
+  gap: 0.2rem;
+
+  strong {
+    color: #fff7e6;
+  }
+
+  small {
+    color: rgba(255, 247, 230, 0.62);
+  }
+}
+
+.buyer-block--muted strong {
+  color: rgba(255, 247, 230, 0.78);
+}
+
+.ticket-item-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.16);
+  border-radius: 1.3rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ticket-item-card__head,
+.ticket-item-card__grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ticket-item-card__head {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.ticket-item-card__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card-meta {
+  display: block;
+  color: #f4d06f;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  margin-bottom: 0.25rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+
+  a,
+  .muted-link {
+    color: #f4d06f;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.muted-link {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  background: rgba(201, 162, 39, 0.08);
+  color: #fff7e6;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+}
+
+.status-chip--active {
+  background: rgba(86, 196, 111, 0.14);
+  border-color: rgba(86, 196, 111, 0.28);
+  color: #b8f4c6;
+}
+
+.status-chip--used {
+  background: rgba(244, 208, 111, 0.12);
+  border-color: rgba(244, 208, 111, 0.28);
+  color: #f4d06f;
+}
+
+.status-chip--cancelled {
+  background: rgba(226, 96, 96, 0.14);
+  border-color: rgba(226, 96, 96, 0.28);
+  color: #ffb6b6;
+}
+
+.state-box,
+.empty-box {
+  display: grid;
+  place-items: center;
+  gap: 0.8rem;
+  min-height: 240px;
+  text-align: center;
+  color: #fff7e6;
+}
+
+@media (max-width: 1100px) {
+  .filters-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .filters-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .table-wrap {
+    display: none;
+  }
+
+  .cards-wrap {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ticket-item-card__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

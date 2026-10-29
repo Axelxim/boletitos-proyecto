@@ -1,0 +1,29 @@
+<ion-app>
+  @if (showPublicHeader()) {
+    <header class="topbar">
+      <a class="brand" routerLink="/">Boletitos</a>
+
+      <nav class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
+        <a routerLink="/mis-boletos" routerLinkActive="active">Mis boletos</a>
+
+        @if (isAuthenticated()) {
+          <a routerLink="/perfil" routerLinkActive="active">Mi perfil</a>
+
+          @if (isAdmin()) {
+            <a routerLink="/admin/dashboard" routerLinkActive="active">Panel administrativo</a>
+          }
+
+          <span class="user-chip">{{ userLabel() }}</span>
+          <button type="button" class="nav-button" (click)="cerrarSesion()">Cerrar sesion</button>
+        } @else {
+          <a routerLink="/login" routerLinkActive="active">Entrar</a>
+          <a routerLink="/registro" routerLinkActive="active">Registrarse</a>
+        }
+      </nav>
+    </header>
+  }
+
+  <ion-router-outlet></ion-router-outlet>
+</ion-app>

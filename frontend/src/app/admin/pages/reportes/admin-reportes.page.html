@@ -1,0 +1,207 @@
+<section class="reportes-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Reportes</p>
+      <h2>Inteligencia operativa</h2>
+      <p>Consulta ventas, asistencia y comportamiento comercial con la informacion ya disponible en Boletitos.</p>
+    </div>
+
+    <div class="head-actions">
+      <ion-button class="ghost-button" fill="outline" (click)="exportarCsv()">Exportar CSV</ion-button>
+      <ion-button class="ghost-button" fill="outline" (click)="exportarPdf()">Exportar PDF</ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando reportes...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    @if (exportMessage()) {
+      <ion-text color="warning">
+        <p class="feedback feedback--warning">{{ exportMessage() }}</p>
+      </ion-text>
+    }
+
+    <section class="filters-card">
+      <label class="field">
+        <span>Desde</span>
+        <input type="date" [ngModel]="fechaDesde()" (ngModelChange)="updateFechaDesde($event)">
+      </label>
+
+      <label class="field">
+        <span>Hasta</span>
+        <input type="date" [ngModel]="fechaHasta()" (ngModelChange)="updateFechaHasta($event)">
+      </label>
+
+      <label class="field">
+        <span>Evento</span>
+        <select [ngModel]="eventoFilter()" (ngModelChange)="updateEvento($event)">
+          <option value="todos">Todos</option>
+          @for (evento of eventosDisponibles(); track evento.id) {
+            <option [value]="evento.id">{{ evento.titulo }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Categoria</span>
+        <select [ngModel]="categoriaFilter()" (ngModelChange)="updateCategoria($event)">
+          <option value="todos">Todas</option>
+          @for (categoria of categoriasDisponibles(); track categoria.id) {
+            <option [value]="categoria.id">{{ categoria.nombre }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Estado de orden</span>
+        <select [ngModel]="estadoOrdenFilter()" (ngModelChange)="updateEstadoOrden($event)">
+          <option value="todos">Todos</option>
+          <option value="pagada">Pagada</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="fallida">Fallida</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="stats-grid">
+      @for (card of resumenCards(); track card.label) {
+        <article class="stat-card">
+          <span>{{ card.label }}</span>
+          <strong>
+            @if (card.currency) {
+              {{ card.value | currency:'MXN':'symbol':'1.2-2' }}
+            } @else if (card.suffix) {
+              {{ card.value | number:'1.0-2' }}{{ card.suffix }}
+            } @else {
+              {{ card.value | number:'1.0-0' }}
+            }
+          </strong>
+        </article>
+      }
+    </section>
+
+    <section class="report-card">
+      <div class="section-head">
+        <p class="eyebrow">Ventas por evento</p>
+        <h3>Rendimiento comercial</h3>
+      </div>
+
+      @if (ventasPorEvento().length > 0) {
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Ordenes pagadas</th>
+                <th>Boletos vendidos</th>
+                <th>Ingresos</th>
+                <th>Boletos disponibles</th>
+                <th>% vendido</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of ventasPorEvento(); track row.evento_id) {
+                <tr>
+                  <td>{{ row.evento }}</td>
+                  <td>{{ row.ordenes_pagadas }}</td>
+                  <td>{{ row.boletos_vendidos }}</td>
+                  <td>{{ row.ingresos | currency:'MXN':'symbol':'1.2-2' }}</td>
+                  <td>{{ row.boletos_disponibles }}</td>
+                  <td>{{ row.porcentaje_vendido | number:'1.0-2' }}%</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>No hay datos suficientes para el reporte de ventas por evento.</p>
+        </div>
+      }
+    </section>
+
+    <section class="report-card">
+      <div class="section-head">
+        <p class="eyebrow">Ventas por tipo de boleto</p>
+        <h3>Desglose por inventario</h3>
+      </div>
+
+      @if (ventasPorTipo().length > 0) {
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Tipo de boleto</th>
+                <th>Cantidad vendida</th>
+                <th>Precio</th>
+                <th>Ingresos</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of ventasPorTipo(); track row.tipo_boleto_id) {
+                <tr>
+                  <td>{{ row.evento }}</td>
+                  <td>{{ row.tipo_boleto }}</td>
+                  <td>{{ row.cantidad_vendida }}</td>
+                  <td>{{ row.precio | currency:'MXN':'symbol':'1.2-2' }}</td>
+                  <td>{{ row.ingresos | currency:'MXN':'symbol':'1.2-2' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>No hay datos suficientes para el reporte por tipo de boleto.</p>
+        </div>
+      }
+    </section>
+
+    <section class="report-card">
+      <div class="section-head">
+        <p class="eyebrow">Asistencia</p>
+        <h3>Accesos por evento</h3>
+      </div>
+
+      @if (asistenciaRows().length > 0) {
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Boletos emitidos</th>
+                <th>Boletos usados</th>
+                <th>Boletos pendientes</th>
+                <th>% acceso</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of asistenciaRows(); track row.evento_id) {
+                <tr>
+                  <td>{{ row.evento }}</td>
+                  <td>{{ row.boletos_emitidos }}</td>
+                  <td>{{ row.boletos_usados }}</td>
+                  <td>{{ row.boletos_pendientes }}</td>
+                  <td>{{ row.porcentaje_acceso | number:'1.0-2' }}%</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-box">
+          <p>No hay datos suficientes para el reporte de asistencia.</p>
+        </div>
+      }
+    </section>
+  }
+</section>

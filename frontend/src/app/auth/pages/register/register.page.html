@@ -1,0 +1,113 @@
+<ion-content [fullscreen]="true">
+  <section class="auth-page">
+    <div class="auth-shell auth-shell--register">
+      <div class="auth-copy">
+        <p class="eyebrow">Boletitos</p>
+        <h1>Crea tu cuenta</h1>
+        <p>Registra tus datos para consultar tus boletos, seguir tus compras y agilizar tu acceso a futuros eventos.</p>
+        <div class="auth-links">
+          <a class="back-link" routerLink="/eventos">Volver al sitio publico</a>
+          <a class="back-link" routerLink="/login">¿Ya tienes cuenta? Inicia sesion</a>
+        </div>
+      </div>
+
+      <section class="auth-card">
+        <div class="panel-head">
+          <p class="eyebrow">Registro</p>
+          <h2>Nueva cuenta</h2>
+        </div>
+
+        <div class="form-grid form-grid--two">
+          <label class="field">
+            <span>Nombre *</span>
+            <input type="text" [value]="form().nombre" (input)="updateField('nombre', $event)" placeholder="Tu nombre">
+          </label>
+
+          <label class="field">
+            <span>Apellido</span>
+            <input type="text" [value]="form().apellido" (input)="updateField('apellido', $event)" placeholder="Tu apellido">
+          </label>
+
+          <label class="field">
+            <span>Correo *</span>
+            <input type="email" [value]="form().correo" (input)="updateField('correo', $event)" placeholder="tu@correo.com">
+          </label>
+
+          <label class="field">
+            <span>Telefono</span>
+            <input
+              type="tel"
+              inputmode="numeric"
+              maxlength="10"
+              [value]="form().telefono"
+              (input)="updateField('telefono', $event)"
+              placeholder="4491234567"
+            >
+          </label>
+
+          <label class="field">
+            <span>Password *</span>
+            <div class="password-field">
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                [value]="form().password"
+                (input)="updateField('password', $event)"
+                placeholder="Minimo 8 caracteres"
+              >
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility('password')">
+                {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Confirmar password *</span>
+            <div class="password-field">
+              <input
+                [type]="showPasswordConfirmation() ? 'text' : 'password'"
+                [value]="form().confirmacion"
+                (input)="updateField('confirmacion', $event)"
+                placeholder="Repite tu password"
+              >
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility('confirmacion')">
+                {{ showPasswordConfirmation() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+          </label>
+        </div>
+
+        @if (errorMessage()) {
+          <ion-text color="danger">
+            <p class="feedback">{{ errorMessage() }}</p>
+          </ion-text>
+        }
+
+        @if (successMessage()) {
+          <ion-text color="success">
+            <p class="feedback feedback--success">{{ successMessage() }}</p>
+          </ion-text>
+        }
+
+        <ion-button class="auth-button" expand="block" [disabled]="!canSubmit()" (click)="registrarse()">
+          {{ submitting() ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </ion-button>
+
+        @if (submitting()) {
+          <div class="loading-box">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Registrando cuenta...</p>
+          </div>
+        }
+
+        @if (registeredResult()) {
+          <div class="auth-links auth-links--actions">
+            <button type="button" class="back-link action-link" (click)="irALogin()">Ir a login</button>
+            <button type="button" class="back-link action-link" [disabled]="submitting()" (click)="reenviarVerificacion()">
+              Reenviar correo de verificacion
+            </button>
+          </div>
+        }
+      </section>
+    </div>
+  </section>
+</ion-content>

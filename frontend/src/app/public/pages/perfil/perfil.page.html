@@ -1,0 +1,129 @@
+<ion-content [fullscreen]="true">
+  <section class="perfil-page">
+    <div class="page-head">
+      <p class="eyebrow">Cuenta</p>
+      <h1>Mi perfil</h1>
+      <p>Administra tu informacion personal y la seguridad de tu cuenta Boletitos.</p>
+    </div>
+
+    @if (loading()) {
+      <section class="panel-card loading-card">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando perfil...</p>
+      </section>
+    } @else {
+      <div class="perfil-grid">
+        <section class="panel-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Perfil</p>
+              <h2>Datos del comprador</h2>
+            </div>
+            <span class="status-chip" [class.status-chip--warning]="!isVerified()">
+              {{ isVerified() ? 'Correo verificado' : 'Correo pendiente' }}
+            </span>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Nombre *</span>
+              <input type="text" [ngModel]="profile().nombre" (ngModelChange)="updateField('nombre', $event)">
+            </label>
+            <label class="field">
+              <span>Apellido</span>
+              <input type="text" [ngModel]="profile().apellido" (ngModelChange)="updateField('apellido', $event)">
+            </label>
+            <label class="field">
+              <span>Correo</span>
+              <input type="email" [value]="profile().correo" readonly>
+            </label>
+            <label class="field">
+              <span>Telefono</span>
+              <input type="tel" [ngModel]="profile().telefono" (ngModelChange)="updateField('telefono', $event)">
+            </label>
+          </div>
+
+          <div class="meta-grid">
+            <div>
+              <span>Estado</span>
+              <strong>{{ profile().estado || 'No disponible' }}</strong>
+            </div>
+            <div>
+              <span>Rol</span>
+              <strong>{{ profile().rol || 'No disponible' }}</strong>
+            </div>
+            <div>
+              <span>Correo verificado</span>
+              <strong>
+                @if (profile().correo_verificado_at) {
+                  {{ profile().correo_verificado_at | date:'medium' }}
+                } @else {
+                  Pendiente
+                }
+              </strong>
+            </div>
+            <div>
+              <span>Registro</span>
+              <strong>
+                @if (profile().created_at) {
+                  {{ profile().created_at | date:'mediumDate' }}
+                } @else {
+                  No disponible
+                }
+              </strong>
+            </div>
+          </div>
+
+          @if (errorMessage()) {
+            <ion-text color="danger">
+              <p class="feedback">{{ errorMessage() }}</p>
+            </ion-text>
+          }
+          @if (successMessage()) {
+            <ion-text color="success">
+              <p class="feedback feedback--success">{{ successMessage() }}</p>
+            </ion-text>
+          }
+
+          <ion-button class="primary-button" [disabled]="savingProfile()" (click)="guardarPerfil()">
+            {{ savingProfile() ? 'Guardando...' : 'Guardar perfil' }}
+          </ion-button>
+        </section>
+
+        <section class="panel-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Seguridad</p>
+              <h2>Cambiar password</h2>
+            </div>
+          </div>
+
+          <div class="form-grid form-grid--single">
+            <label class="field">
+              <span>Password actual *</span>
+              <input type="password" [ngModel]="passwordForm().password_actual" (ngModelChange)="updatePasswordField('password_actual', $event)">
+            </label>
+            <label class="field">
+              <span>Password nueva *</span>
+              <input type="password" [ngModel]="passwordForm().password_nuevo" (ngModelChange)="updatePasswordField('password_nuevo', $event)">
+            </label>
+            <label class="field">
+              <span>Confirmar password *</span>
+              <input type="password" [ngModel]="passwordForm().password_confirmacion" (ngModelChange)="updatePasswordField('password_confirmacion', $event)">
+            </label>
+          </div>
+
+          @if (passwordMessage()) {
+            <ion-text color="warning">
+              <p class="feedback feedback--success">{{ passwordMessage() }}</p>
+            </ion-text>
+          }
+
+          <ion-button class="primary-button" [disabled]="savingPassword()" (click)="cambiarPassword()">
+            {{ savingPassword() ? 'Actualizando...' : 'Actualizar password' }}
+          </ion-button>
+        </section>
+      </div>
+    }
+  </section>
+</ion-content>

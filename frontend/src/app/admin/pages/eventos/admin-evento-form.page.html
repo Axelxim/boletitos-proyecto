@@ -1,0 +1,148 @@
+<section class="admin-evento-form-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Eventos</p>
+      <h2>{{ pageTitle() }}</h2>
+      <p>{{ pageDescription() }}</p>
+    </div>
+
+    <div class="head-actions">
+      <ion-button class="ghost-button" fill="outline" routerLink="/admin/eventos">Cancelar</ion-button>
+      <ion-button class="save-button" [disabled]="submitting()" (click)="guardar()">
+        {{ submitting() ? 'Guardando...' : 'Guardar evento' }}
+      </ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando formulario...</p>
+    </div>
+  } @else if (errorMessage() && isEditMode() && !form().titulo) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    <div class="form-layout">
+      <section class="form-card">
+        <div class="section-head">
+          <p class="eyebrow">1. Informacion general</p>
+          <h3>Datos principales</h3>
+        </div>
+
+        <div class="form-grid form-grid--two">
+          <label class="field">
+            <span>Titulo *</span>
+            <input type="text" [value]="form().titulo" (input)="updateField('titulo', $event)">
+            @if (validationErrors()['titulo']) { <small>{{ validationErrors()['titulo'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Categoria *</span>
+            <select [ngModel]="form().categoria_id" (ngModelChange)="updateSelectField('categoria_id', $event)">
+              <option value="">Selecciona una categoria</option>
+              @for (categoria of categorias(); track categoria.id) {
+                <option [value]="categoria.id">{{ categoria.nombre }}</option>
+              }
+            </select>
+            @if (validationErrors()['categoria_id']) { <small>{{ validationErrors()['categoria_id'] }}</small> }
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Descripcion</span>
+          <textarea rows="4" [value]="form().descripcion" (input)="updateField('descripcion', $event)"></textarea>
+        </label>
+      </section>
+
+      <section class="form-card">
+        <div class="section-head">
+          <p class="eyebrow">2. Fecha y horario</p>
+          <h3>Programacion</h3>
+        </div>
+
+        <div class="form-grid form-grid--two">
+          <label class="field">
+            <span>Fecha inicio *</span>
+            <input type="datetime-local" [value]="form().fecha_inicio" (input)="updateField('fecha_inicio', $event)">
+            @if (validationErrors()['fecha_inicio']) { <small>{{ validationErrors()['fecha_inicio'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Fecha fin *</span>
+            <input type="datetime-local" [value]="form().fecha_fin" (input)="updateField('fecha_fin', $event)">
+            @if (validationErrors()['fecha_fin']) { <small>{{ validationErrors()['fecha_fin'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Fecha evento</span>
+            <input type="date" [value]="form().fecha_evento" (input)="updateField('fecha_evento', $event)">
+          </label>
+
+          <label class="field">
+            <span>Hora evento</span>
+            <input type="time" [value]="form().hora_evento" (input)="updateField('hora_evento', $event)">
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="section-head">
+          <p class="eyebrow">3. Lugar y sede</p>
+          <h3>Ubicacion</h3>
+        </div>
+
+        <div class="form-grid form-grid--two">
+          <label class="field">
+            <span>Sede *</span>
+            <select [ngModel]="form().sede_id" (ngModelChange)="updateSelectField('sede_id', $event)">
+              <option value="">Selecciona una sede</option>
+              @for (sede of sedes(); track sede.id) {
+                <option [value]="sede.id">{{ sede.nombre }}</option>
+              }
+            </select>
+            @if (validationErrors()['sede_id']) { <small>{{ validationErrors()['sede_id'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Lugar *</span>
+            <input type="text" [value]="form().lugar" (input)="updateField('lugar', $event)">
+            @if (validationErrors()['lugar']) { <small>{{ validationErrors()['lugar'] }}</small> }
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Direccion</span>
+          <textarea rows="3" [value]="form().direccion" (input)="updateField('direccion', $event)"></textarea>
+        </label>
+      </section>
+
+      <section class="form-card">
+        <div class="section-head">
+          <p class="eyebrow">4. Publicacion</p>
+          <h3>Estado del evento</h3>
+        </div>
+
+        <div class="form-grid form-grid--two">
+          <label class="field">
+            <span>Estado</span>
+            <select [ngModel]="form().estado" (ngModelChange)="updateSelectField('estado', $event)">
+              <option value="borrador">Borrador</option>
+              <option value="publicado">Publicado</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="cancelado">Cancelado</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </label>
+        </div>
+
+        @if (errorMessage() && (!isEditMode() || form().titulo)) {
+          <ion-text color="danger">
+            <p class="feedback">{{ errorMessage() }}</p>
+          </ion-text>
+        }
+      </section>
+    </div>
+  }
+</section>

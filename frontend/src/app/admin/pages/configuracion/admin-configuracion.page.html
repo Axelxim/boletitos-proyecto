@@ -1,0 +1,128 @@
+<section class="config-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Configuracion</p>
+      <h2>Configuracion general del sistema</h2>
+      <p>Administra parametros globales de Boletitos sin modificar codigo ni exponer secretos sensibles.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando configuracion...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else if (configData(); as config) {
+    <div class="config-layout">
+      <aside class="tabs-panel">
+        @for (tab of tabs; track tab.key) {
+          <button
+            type="button"
+            class="tab-button"
+            [class.tab-button--active]="activeTab() === tab.key"
+            (click)="seleccionarTab(tab.key)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </aside>
+
+      <section class="section-panel">
+        @if (currentSection(); as section) {
+          <div class="section-head">
+            <p class="eyebrow">{{ section.title }}</p>
+            <h3>{{ section.title }}</h3>
+          </div>
+
+          @if (apiMessage()) {
+            <ion-text color="warning">
+              <p class="feedback feedback--info">{{ apiMessage() }}</p>
+            </ion-text>
+          }
+
+          @if (section.fields.length > 0) {
+            <div class="form-grid">
+              @for (field of section.fields; track field.key) {
+                <label class="field" [class.field--full]="isTextareaField(field)">
+                  <span>{{ field.label }}</span>
+
+                  @if (isTextareaField(field)) {
+                    <textarea
+                      rows="4"
+                      [ngModel]="formValues()[field.key]"
+                      (ngModelChange)="updateField(field, $event)"
+                    ></textarea>
+                  } @else if (isBooleanField(field)) {
+                    <select
+                      [ngModel]="fieldStringValue(field)"
+                      (ngModelChange)="updateField(field, $event)"
+                    >
+                      <option value="true">Si</option>
+                      <option value="false">No</option>
+                    </select>
+                  } @else if (isSelectField(field)) {
+                    <select
+                      [ngModel]="formValues()[field.key]"
+                      (ngModelChange)="updateField(field, $event)"
+                    >
+                      @for (option of field.options || []; track option) {
+                        <option [value]="option">{{ option }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input
+                      [type]="field.type === 'number' || field.type === 'integer' ? 'number' : (field.type === 'email' ? 'email' : (field.type === 'url' ? 'url' : 'text'))"
+                      [step]="field.type === 'number' ? '0.01' : null"
+                      [ngModel]="formValues()[field.key]"
+                      (ngModelChange)="updateField(field, $event)"
+                    >
+                  }
+
+                  @if (field.description) {
+                    <small>{{ field.description }}</small>
+                  }
+
+                  @if (validationErrors()[field.key]) {
+                    <small class="field-error">{{ validationErrors()[field.key] }}</small>
+                  }
+                </label>
+              }
+            </div>
+          } @else {
+            <div class="info-box">
+              <p>Esta seccion es informativa. Las credenciales sensibles siguen administrandose desde variables de entorno.</p>
+            </div>
+          }
+
+          @if (section.info) {
+            <div class="info-grid">
+              @for (item of section.info | keyvalue; track item.key) {
+                <article class="info-card">
+                  <span>{{ item.key }}</span>
+                  <strong>{{ item.value }}</strong>
+                </article>
+              }
+            </div>
+          }
+
+          @if (!isReadonlySection()) {
+            <div class="form-actions">
+              <ion-button class="ghost-button" fill="outline" (click)="restaurarFormulario()">Restaurar valores del formulario</ion-button>
+              <ion-button class="save-button" [disabled]="saving() || !hasChanges()" (click)="guardarCambios()">
+                @if (saving()) {
+                  <ion-spinner name="crescent"></ion-spinner>
+                } @else {
+                  Guardar cambios
+                }
+              </ion-button>
+            </div>
+          }
+        }
+      </section>
+    </div>
+  }
+</section>

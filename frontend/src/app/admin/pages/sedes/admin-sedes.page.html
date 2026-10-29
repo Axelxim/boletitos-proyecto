@@ -1,0 +1,143 @@
+<section class="admin-crud-page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Sedes</p>
+      <h2>Gestion de sedes</h2>
+      <p>Administra los recintos y puntos de acceso que se usan en los eventos.</p>
+    </div>
+
+    <div class="head-actions">
+      <div class="summary-pills">
+        <span>Total: {{ summary().total }}</span>
+        <span>Activas: {{ summary().activas }}</span>
+        <span>Otros estados: {{ summary().otras }}</span>
+      </div>
+      <ion-button class="new-button" (click)="nuevaSede()">NUEVA SEDE</ion-button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando sedes...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <ion-text color="danger">
+      <p class="feedback">{{ errorMessage() }}</p>
+    </ion-text>
+  } @else {
+    <div class="content-grid">
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Direccion</th>
+              <th>Ciudad / pais</th>
+              <th>Capacidad</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sede of sedes(); track sede.id) {
+              <tr>
+                <td><strong>{{ sede.nombre }}</strong></td>
+                <td>{{ sede.direccion }}</td>
+                <td>{{ sede.ciudad || 'Sin ciudad' }}{{ sede.pais ? ' / ' + sede.pais : '' }}</td>
+                <td>{{ sede.capacidad ?? 'N/D' }}</td>
+                <td><span [class]="estadoClass(sede)">{{ sede.estado_sede || 'activo' }}</span></td>
+                <td>
+                  <div class="actions">
+                    <button type="button" (click)="editarSede(sede)">Editar</button>
+                    <button type="button" class="danger" (click)="eliminarSede(sede)">Eliminar</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="form-panel">
+        <div class="panel-head">
+          <p class="eyebrow">Formulario</p>
+          <h3>{{ editingSedeId() ? 'Editar sede' : 'Nueva sede' }}</h3>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Nombre *</span>
+            <input type="text" [ngModel]="form().nombre" (ngModelChange)="updateField('nombre', $event)">
+            @if (validationErrors()['nombre']) { <small>{{ validationErrors()['nombre'] }}</small> }
+          </label>
+
+          <label class="field field--full">
+            <span>Direccion *</span>
+            <input type="text" [ngModel]="form().direccion" (ngModelChange)="updateField('direccion', $event)">
+            @if (validationErrors()['direccion']) { <small>{{ validationErrors()['direccion'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Ciudad</span>
+            <input type="text" [ngModel]="form().ciudad" (ngModelChange)="updateField('ciudad', $event)">
+          </label>
+
+          <label class="field">
+            <span>Estado</span>
+            <input type="text" [ngModel]="form().estado" (ngModelChange)="updateField('estado', $event)">
+          </label>
+
+          <label class="field">
+            <span>Pais</span>
+            <input type="text" [ngModel]="form().pais" (ngModelChange)="updateField('pais', $event)">
+          </label>
+
+          <label class="field">
+            <span>Capacidad</span>
+            <input type="number" min="0" [ngModel]="form().capacidad" (ngModelChange)="updateField('capacidad', $event)">
+            @if (validationErrors()['capacidad']) { <small>{{ validationErrors()['capacidad'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Latitud</span>
+            <input type="number" step="any" [ngModel]="form().latitud" (ngModelChange)="updateField('latitud', $event)">
+            @if (validationErrors()['latitud']) { <small>{{ validationErrors()['latitud'] }}</small> }
+          </label>
+
+          <label class="field">
+            <span>Longitud</span>
+            <input type="number" step="any" [ngModel]="form().longitud" (ngModelChange)="updateField('longitud', $event)">
+            @if (validationErrors()['longitud']) { <small>{{ validationErrors()['longitud'] }}</small> }
+          </label>
+
+          <label class="field field--full">
+            <span>URL del mapa</span>
+            <input type="text" [ngModel]="form().mapa_url" (ngModelChange)="updateField('mapa_url', $event)">
+          </label>
+
+          <label class="field">
+            <span>Estado de la sede</span>
+            <select [ngModel]="form().estado_sede" (ngModelChange)="updateField('estado_sede', $event)">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </label>
+        </div>
+
+        @if (apiMessage()) {
+          <ion-text color="warning">
+            <p class="feedback feedback--info">{{ apiMessage() }}</p>
+          </ion-text>
+        }
+
+        <div class="form-actions">
+          <ion-button class="ghost-button" fill="outline" (click)="nuevaSede()">Limpiar</ion-button>
+          <ion-button class="new-button" [disabled]="saving()" (click)="guardarSede()">
+            @if (saving()) { <ion-spinner name="crescent"></ion-spinner> } @else { {{ editingSedeId() ? 'GUARDAR CAMBIOS' : 'CREAR SEDE' }} }
+          </ion-button>
+        </div>
+      </aside>
+    </div>
+  }
+</section>
