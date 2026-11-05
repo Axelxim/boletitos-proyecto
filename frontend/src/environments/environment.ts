@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://mediumblue-worm-371886.hostingersite.com/api',
+  apiBaseUrl: 'http://localhost:8080/api',
 };
 
 /*

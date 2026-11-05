@@ -41,6 +41,7 @@ class PayPalService
                         'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
                         'user_action'               => 'PAY_NOW',
                         'brand_name'                => 'Boletitos',
+                        'shipping_preference'       => 'NO_SHIPPING',
                     ],
                 ],
             ],

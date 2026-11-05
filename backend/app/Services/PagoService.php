@@ -189,6 +189,8 @@ class PagoService
             ];
         }
 
+        $this->reconectarBaseDatos();
+
         $sanitized = $this->payPalService->sanitizarRespuesta($paypalOrder);
         $pagoId = $this->pagoModel->insert([
             'orden_id'        => $ordenId,
@@ -293,6 +295,8 @@ class PagoService
             ];
         }
 
+        $this->reconectarBaseDatos();
+
         $validationErrors = $this->validarOrdenPaypal($paypalOrder, $orden, $pago, $moneda);
 
         if ($validationErrors !== []) {
@@ -322,6 +326,8 @@ class PagoService
                 'status'  => 502,
             ];
         }
+
+        $this->reconectarBaseDatos();
 
         $captureValidationErrors = $this->validarCapturaPaypal($capture, $orden, $pago, $moneda);
 
@@ -576,5 +582,12 @@ class PagoService
         }
 
         return $moneda;
+    }
+
+    private function reconectarBaseDatos(): void
+    {
+        $db = Database::connect();
+        $db->close();
+        $db->initialize();
     }
 }
